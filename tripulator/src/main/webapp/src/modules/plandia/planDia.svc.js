@@ -33,9 +33,9 @@
              */
             this.saveRecord = function (idViajero, idItinerario, currentRecord) {
                 if (currentRecord.id) {
-                    return $http.put(context + "/" + idViajero + "/itinerarios" + idItinerario + "/dias/" + currentRecord.id, currentRecord);
+                    return $http.put(context + "/" + idViajero + "/itinerarios/" + idItinerario + "/dias/" + currentRecord.id, currentRecord);
                 } else {
-                    return $http.post(context + "/" + idViajero + "/itinerarios" + idItinerario + "/dias", currentRecord);
+                    return $http.post(context + "/" + idViajero + "/itinerarios/" + idItinerario + "/dias", currentRecord);
                 }
             };
             

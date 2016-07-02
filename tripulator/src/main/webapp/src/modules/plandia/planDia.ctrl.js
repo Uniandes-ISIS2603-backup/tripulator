@@ -10,7 +10,6 @@
             $scope.editMode = false;
             
             $scope.currentEvent = {
-                "id": undefined,
                 "title": "",
                 "type": "",
                 "image": "",
@@ -38,10 +37,10 @@
             }
             
             $scope.fetchEvents = function () {
-                console.log(dataSvc.userId+', '+dataSvc.tripId+', '+dataSvc.dayId);
+                alert('fetching: '+ dataSvc.userId+', '+dataSvc.tripId+', '+dataSvc.dayId);
                 return svc.getEvents(dataSvc.userId, dataSvc.tripId, dataSvc.dayId).then(function (response) {
                     $scope.events = response.data;
-                    console.log(response.data);
+                    console.log('fetch events answer: ' + response.data);
                     $scope.currentEvent = {};
                     $scope.editMode = false;
                     return response;
@@ -55,14 +54,11 @@
             };
             
             $scope.saveEvent = function () {
-                console.log(dataSvc.userId+', '+dataSvc.tripId+', '+dataSvc.dayId);
+                alert('saving: ' + dataSvc.userId+', '+dataSvc.tripId+', '+dataSvc.dayId);
                 var newEvent = $scope.currentEvent;
-                if (newEvent.id){
-                    
-                }
-                else {
-                    
-                }
+                svc.saveRecord(dataSvc.userId, dataSvc.tripId, newEvent).then(function(){
+                    $scope.fetchEvents();
+                }, responseError);
                 $scope.fetchEvents();
             };
             
