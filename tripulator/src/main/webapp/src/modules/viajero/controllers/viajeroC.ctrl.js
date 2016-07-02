@@ -1,13 +1,12 @@
 (function (ng) {
     var mod = ng.module("viajeroModule");
-    mod.controller('ViajeroC', ['$scope', '$element', '$window', '$mdDialog', 'viajeroS', 'dataSvc', 'Restangular','countryService',
-        function ($scope, $element, $window, $mdDialog, svc, dataSvc, Restangular, countryService) {
+    mod.controller('ViajeroC', ['$scope', '$element', '$window', '$mdDialog', 'viajeroS', 'dataSvc','countryService',
+        function ($scope, $element, $window, $mdDialog, svc, dataSvc, countryService) {
             var self = this;
             var userData = dataSvc;
             $scope.trips = [];
             $scope.currentTrip;
             $scope.today = new Date();
-            Restangular.one('tripulator/api/viajeros', userData.userId);
             /**
              * Array with all of the possible menu options.
              */
@@ -124,9 +123,9 @@
              * @returns {undefined}
              */
             this.deleteItinerario = function () {                
-                $scope.currentTrip.remove().then(function () {
+                svc.deleteItinerario(userData.userId, userData.tripId).then(function (response) {
                     self.getItinerarios();
-                });
+                }, responseError);
             };
 
             /**
@@ -156,8 +155,8 @@
              * @returns {undefined}
              */
             this.getItinerarios = function () {
-                Restangular.one('tripulator/api/viajeros', userData.userId).getList('itinerarios').then(function(trips){
-                    $scope.trips = trips;
+                svc.getItinerarios(userData.userId).then(function (response) {
+                    $scope.trips = response.data;
                     if ($scope.trips.length === 0) {
                         selectFromMenu($scope.menuOptions[0]);
                         $scope.showAlert("Create Trip", "It appears you have no trips created!");
@@ -168,7 +167,7 @@
                     } else {
                         self.getCachedItinerario($scope.trips[$scope.trips.length - 1]);
                         $scope.$apply();
-                        return trips;
+                        return response.data;
                     }   
                 }, responseError);
             };

@@ -1,7 +1,6 @@
 (function (ng) {
 
     var mod = ng.module("mainApp", [
-        "restangular",
         "googlechart",
         "ngMaterial",
         "ngMessages",
