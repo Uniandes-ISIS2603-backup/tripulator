@@ -69,7 +69,7 @@
                             && ($scope.currentRecord.password === $scope.loginRecord.password))
                     {
                         dataSvc.userId = $scope.currentRecord.id;
-                        $state.go("viajero");
+                        $state.go("viajero", {userId: $scope.currentRecord.id});
                         return;
                     }
                 }

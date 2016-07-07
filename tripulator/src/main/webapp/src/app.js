@@ -31,6 +31,11 @@
                         
                     })
                     .state('viajero', {
+                        params: {
+                            userId: null,
+                            tripId: null,
+                            dayId: null
+                        },
                         url: '/viajero',
                         controller: 'ViajeroC',
                         controllerAs: "ctrl",

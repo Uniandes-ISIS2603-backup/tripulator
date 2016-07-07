@@ -1,7 +1,7 @@
 (function (ng) {
     var mod = ng.module("viajeroModule");
-    mod.controller('ViajeroC', ['$scope', '$element', '$window', '$mdDialog', 'viajeroS', 'dataSvc','countryService',
-        function ($scope, $element, $window, $mdDialog, svc, dataSvc, countryService) {
+    mod.controller('ViajeroC', ['$scope', '$element', '$window', '$mdDialog', 'viajeroS', 'dataSvc','countryService', '$stateParams',
+        function ($scope, $element, $window, $mdDialog, svc, dataSvc, countryService, $stateParams) {
             var self = this;
             var userData = dataSvc;
             $scope.trips = [];
@@ -183,6 +183,7 @@
                 self.generateImage();
                 selectFromMenu($scope.menuActions[0]);
                 userData.tripId = trip.id;
+                $stateParams.tripId = trip.id;
             };
 
             /**
@@ -196,6 +197,7 @@
                     self.generateImage();
                     $scope.menuActions[0].active = true;
                     userData.tripId = tripId;
+                    $stateParams.tripId = tripId;
                 }, responseError);
             };
 
