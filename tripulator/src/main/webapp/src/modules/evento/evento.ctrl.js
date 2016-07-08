@@ -1,11 +1,11 @@
 (function (ng) {
     var mod = ng.module("eventoModule");
-    mod.controller('EventosController', ['$scope', 'EventosInfoService', 'dataSvc', function ($scope, svc, dataSvc) {
+    mod.controller('EventosController', ['$scope', 'EventosInfoService', '$stateParams', function ($scope, svc, $stateParams) {
 
             $scope.events = [];
             $scope.eventoActual = {id:1};
             $scope.commentTemplate = {
-                user: dataSvc.userId,
+                user: $stateParams.userId,
                 stars: 0,
                 comment: ""
             };
@@ -88,7 +88,7 @@
             };
             var self=this;
             this.fetchEventos = function () {
-                return svc.fetchEventos(dataSvc).then(function (response) {
+                return svc.fetchEventos($stateParams).then(function (response) {
                     $scope.comentariosActuales=[];
                     $scope.events = response.data;
 
@@ -102,7 +102,7 @@
             };
 
             this.fetchEventosCiudadDia = function () {
-                return svc.fetchEventosCiudadDia(dataSvc).then(function (response) {
+                return svc.fetchEventosCiudadDia($stateParams).then(function (response) {
                     $scope.comentariosActuales=[];
                     $scope.events = response.data;
 
@@ -115,7 +115,7 @@
             };
 
             this.getComments = function (){
-              return svc.getComments(dataSvc, $scope.eventoActual.id).then(function (response) {
+              return svc.getComments($stateParams, $scope.eventoActual.id).then(function (response) {
                     $scope.comentariosActuales = response.data;
                     return response;
                 }, function (response){
@@ -126,7 +126,7 @@
             this.update = function(cmt,idEvento){
                 cmt.id_evento=idEvento;
                 cmt.id=$scope.comentariosActuales.length+1;
-                return svc.saveRecord(cmt,idEvento, dataSvc).then(function () {
+                return svc.saveRecord(cmt,idEvento, $stateParams).then(function () {
                         self.fetchEventos();
                     }, function (response){ console.log(response);});
             };
@@ -138,7 +138,7 @@
             $scope.anadirEvento = function (record) {
                 console.log("va a añadir evento");
                 if(window.confirm("¿Seguro quieres agregar el evento "+$scope.eventoActual.title+"?")){
-                return svc.addEventoDia(record.id, dataSvc).then(function () {
+                return svc.addEventoDia(record.id, $stateParams).then(function () {
                         self.fetchEventos();
                         window.confirm("¡Se ha agregado con éxito!")
                     }, function (response){ console.log(response);

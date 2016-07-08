@@ -1,6 +1,6 @@
 (function (ng) {
     var sampleApp = ng.module('mapsApp');
-    sampleApp.controller('MapController', ['$scope', 'dataSvc', 'mapService', function ($scope, dataSvc, mapService) {
+    sampleApp.controller('MapController', ['$scope', '$stateParams', 'mapService', function ($scope, $stateParams, mapService) {
             var countryToIso = {
                 "Afghanistan": "AF",
                 "Aland Islands": "AX",
@@ -1233,7 +1233,7 @@
             };
 
             function getDias() {
-                mapService.getDias(dataSvc.userId, dataSvc.tripId).then(function (resolve) {
+                mapService.getDias($stateParams.userId, $stateParams.tripId).then(function (resolve) {
                     var days = resolve.data;
                     setTimeout(function () {
                         var info = fillCities(days);

@@ -2,12 +2,14 @@
 
     var mod = ng.module("itinerarioModule");
 
-    mod.controller('ItinerarioController', ['$scope', '$window', 'itinerarioService', 'dataSvc',
-        function ($scope, $window, svc, dataSvc) {
+    mod.controller('ItinerarioController', ['$scope', '$window', 'itinerarioService', '$stateParams', '$state',
+        function ($scope, $window, svc, $stateParams, $state) {
             $scope.days = [];
             $scope.showDayInfo = false;
             $scope.daynames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
             $scope.selectedDay = {};
+            $scope.newDayId;
+            console.log($stateParams);
             $scope.itinerario = {
                 id: Number, //número de identificación de un itinerario,  
                 nombre: String, // Nombre dado al itinerario.  
@@ -103,7 +105,7 @@
              * @returns {undefined}
              */
             this.getDias = function () {
-                svc.getDias(dataSvc.userId, dataSvc.tripId).then(function (resolve) {
+                svc.getDias($stateParams.userId, $stateParams.tripId).then(function (resolve) {
                     $scope.days = resolve.data;
 
                     modifyDays($scope.days);
@@ -124,7 +126,7 @@
             };
 
             function responseError(response) {
-                self.showError(response);
+                self.showError(response.data);
             }
 
             /**
@@ -159,7 +161,7 @@
              * @returns {undefined}
              */
             $scope.toggleDayInfo = function (day) {
-                dataSvc.dayId = day.id;
+                $scope.newDayId = day.id;
 
                 if (!$scope.showDayInfo)
                     scrollY = $window.scrollY;
@@ -171,6 +173,19 @@
                     $window.scrollTo($window.scrollX, 0);
                 else
                     $window.scrollTo($window.scrollX, scrollY);
+                
+                $scope.selectView('Events');
+            };
+            
+            $scope.selectView = function(name){
+                switch(name){
+                    case 'Events':
+                        $state.go('viajero.itinerario.plandia', {dayId: $scope.newDayId});
+                        break;
+                    case 'Search':
+                        $state.go('viajero.itinerario.evento', {dayId: $scope.newDayId});
+                        break;
+                };
             };
 
             this.getDias();

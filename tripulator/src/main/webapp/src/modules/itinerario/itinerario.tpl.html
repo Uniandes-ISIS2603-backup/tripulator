@@ -39,14 +39,14 @@
         <div class="container-fluid">
             <h2 class="col-xs-9 text-left" id="day-info-header-left">
                 {{selectedDay.pais}} - {{selectedDay.ciudad}}
-            </h3>
+            </h2>
             <h2 class="col-xs-3 text-right" id="day-info-header-right">{{selectedDay.fecha| date}}</h2>
 
         </div>
         <div class="container-fluid">
             <ul class="nav nav-tabs tab-text" id="tab-spacing">
-                <li data-toggle="tab" class="active"><a ui-sref="viajero.itinerario.plandia()" >Events</a></li>
-                <li data-toggle="tab"><a ui-sref="viajero.itinerario.evento()">Search events</a></li>
+                <li data-toggle="tab" class="active"><a ng-click="selectView('Events')">Events</a></li>
+                <li data-toggle="tab"><a ng-click="selectView('Search')">Search events</a></li>
             </ul>
             <div class="view-container">
                 <!-- nested views -->

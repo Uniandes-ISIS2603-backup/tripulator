@@ -1,7 +1,7 @@
 (function (ng) {
     var mod = ng.module("multimediaModule");
 
-    mod.controller("multimediaCtrl", ["$scope", "multimediaService",'dataSvc', function ($scope, svc,dataSvc) {
+    mod.controller("multimediaCtrl", ["$scope", "multimediaService",'$stateParams', function ($scope, svc,$stateParams) {
 
             var self = this;
             
@@ -75,7 +75,7 @@
                                 src: $scope.newUrl
                             };
                          
-                      return svc.saveRecord(dataSvc.userId,dataSvc.tripId,currentRecord).then(function () { 
+                      return svc.saveRecord($stateParams.userId,$stateParams.tripId,currentRecord).then(function () { 
                     self.fetchRecords();
                 }, responseError);
                     
@@ -95,7 +95,7 @@
              */
 
             this.fetchRecords = function () {
-                return svc.fetchRecords(dataSvc.userId ,dataSvc.tripId).then(function (response) {
+                return svc.fetchRecords($stateParams.userId ,$stateParams.tripId).then(function (response) {
                     self.inicializarSlides(response.data);
                     self.splitSlides();
                 }, responseError);
@@ -133,7 +133,7 @@
              */
             $scope.deleteRecord = function () {
                
-                return svc.deleteRecord(dataSvc.userId,dataSvc.tripId,self.darIdFoto($scope.currentIndex)).then(function () { 
+                return svc.deleteRecord($stateParams.userId,$stateParams.tripId,self.darIdFoto($scope.currentIndex)).then(function () { 
                     self.fetchRecords();
                 }, responseError);
             };

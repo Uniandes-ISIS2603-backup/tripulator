@@ -1,9 +1,9 @@
 (function (ng) {
     var mod = ng.module("viajeroModule");
-    mod.controller('ViajeroC', ['$scope', '$element', '$window', '$mdDialog', 'viajeroS', 'dataSvc','countryService', '$stateParams',
-        function ($scope, $element, $window, $mdDialog, svc, dataSvc, countryService, $stateParams) {
+    mod.controller('ViajeroC', ['$scope', '$element', '$window', '$mdDialog', 'viajeroS','countryService', '$stateParams', '$state',
+        function ($scope, $element, $window, $mdDialog, svc, countryService, $stateParams, $state) {
             var self = this;
-            var userData = dataSvc;
+            var tripId;
             $scope.trips = [];
             $scope.currentTrip;
             $scope.today = new Date();
@@ -123,7 +123,7 @@
              * @returns {undefined}
              */
             this.deleteItinerario = function () {                
-                svc.deleteItinerario(userData.userId, userData.tripId).then(function (response) {
+                svc.deleteItinerario($stateParams.userId, tripId).then(function (response) {
                     self.getItinerarios();
                 }, responseError);
             };
@@ -134,7 +134,7 @@
              * @returns {undefined}
              */
             this.addItinerario = function (trip) {
-                svc.addItinerario(userData.userId, trip).then(function (response) {
+                svc.addItinerario($stateParams.userId, trip).then(function (response) {
                     self.addDays(response.data.id, planDias);
                     self.getItinerarios();
                     finishCreation();
@@ -143,7 +143,7 @@
 
             this.addDays = function (tripId, planDias) {
                 for (var i = 0; i < planDias.length; i++) {
-                    svc.addDia(userData.userId, tripId, planDias[i]).then(function (response) {
+                    svc.addDia($stateParams.userId, tripId, planDias[i]).then(function (response) {
 
                     }, responseError);
                 }
@@ -155,7 +155,7 @@
              * @returns {undefined}
              */
             this.getItinerarios = function () {
-                svc.getItinerarios(userData.userId).then(function (response) {
+                svc.getItinerarios($stateParams.userId).then(function (response) {
                     $scope.trips = response.data;
                     if ($scope.trips.length === 0) {
                         selectFromMenu($scope.menuOptions[0]);
@@ -166,7 +166,6 @@
                         },300);
                     } else {
                         self.getCachedItinerario($scope.trips[$scope.trips.length - 1]);
-                        $scope.$apply();
                         return response.data;
                     }   
                 }, responseError);
@@ -181,9 +180,10 @@
             this.getCachedItinerario = function (trip) {
                 $scope.currentTrip = trip;
                 self.generateImage();
+                tripId = trip.id;
                 selectFromMenu($scope.menuActions[0]);
-                userData.tripId = trip.id;
-                $stateParams.tripId = trip.id;
+                selectView($scope.menuActions[0]);
+                console.log($stateParams);
             };
 
             /**
@@ -192,12 +192,12 @@
              * @returns {undefined}
              */
             this.getItinerario = function (tripId) {
-                svc.getItinerario(userData.userId, tripId).then(function (response) {
+                svc.getItinerario($stateParams.userId, tripId).then(function (response) {
                     $scope.currentTrip = response.data;
                     self.generateImage();
                     $scope.menuActions[0].active = true;
-                    userData.tripId = tripId;
-                    $stateParams.tripId = tripId;
+                    self.tripId = tripId;
+                    console.log($stateParams);
                 }, responseError);
             };
 
@@ -220,6 +220,7 @@
              */
             $scope.selectAction = function (action) {
                 selectFromMenu(action);
+                selectView(action);
             };
 
             /**
@@ -269,19 +270,20 @@
              * @param {type} action
              * @returns {String}
              */
-            $scope.selectView = function (action) {
+            selectView = function (action) {
                 switch (action.name) {
                     case "Calendar":
-                        return "viajero.itinerario()";
+                        $state.go("viajero.itinerario", {tripId: tripId});
                         break;
                     case "Gallery":
-                        return "viajero.multimedia()";
+                        $state.go("viajero.multimedia", {tripId: tripId});
                         break;
                     case "Map":
-                        return "viajero.mapa()";
+                        $state.go("viajero.mapa", {tripId: tripId});
                         break;
-                    default:
-                        return "viajero";
+                    case "Overview":
+                        $state.go("viajero");
+                        break;
                 }
             };
 
@@ -543,7 +545,6 @@
                         });
                     }
                 }
-                $scope.$apply();
             };
             /**
              * When the user has finished creating a trip, this toggles the menu.

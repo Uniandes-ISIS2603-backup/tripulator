@@ -15,7 +15,7 @@
             <li class="sidebar-brand">
                 <a>Actions</a>
             </li>
-            <li ng-repeat="action in menuActions" ng-click="selectAction(action)" ui-sref="{{selectView(action);}}">
+            <li ng-repeat="action in menuActions" ng-click="selectAction(action)">
                 <a ng-style="isActionSelected(action)">
                     {{action.name}}
                 </a>
@@ -23,7 +23,7 @@
             <li class="sidebar-brand">
                 <a>History</a>
             </li>
-            <li ng-repeat="trip in trips" ng-click="ctrl.getCachedItinerario(trip)" ui-sref="viajero">
+            <li ng-repeat="trip in trips" ng-click="ctrl.getCachedItinerario(trip)">
                 <a ng-style="isTripSelected(trip)">{{trip.nombre}}</a>
             </li>
         </ul>

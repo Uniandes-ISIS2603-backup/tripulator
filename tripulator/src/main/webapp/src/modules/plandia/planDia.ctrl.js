@@ -1,7 +1,7 @@
 (function (ng) {
     var mod = ng.module("planDiaModule");
     
-    mod.controller('PlanDiaController', ['$scope', 'planDiaService', 'dataSvc', function ($scope, svc, dataSvc) {
+    mod.controller('PlanDiaController', ['$scope', 'planDiaService', '$stateParams', function ($scope, svc, $stateParams) {
             
             var self = this;
             
@@ -33,14 +33,14 @@
             };
 
             function responseError(response) {
-                self.showError(response);
+                self.showError(response.data);
             }
             
             $scope.fetchEvents = function () {
-                alert('fetching: '+ dataSvc.userId+', '+dataSvc.tripId+', '+dataSvc.dayId);
-                return svc.getEvents(dataSvc.userId, dataSvc.tripId, dataSvc.dayId).then(function (response) {
+                console.log($stateParams);
+                return svc.getEvents($stateParams.userId, $stateParams.tripId, $stateParams.dayId).then(function (response) {
                     $scope.events = response.data;
-                    console.log('fetch events answer: ' + response.data);
+                    console.log(response.data);
                     $scope.currentEvent = {};
                     $scope.editMode = false;
                     return response;
@@ -54,17 +54,17 @@
             };
             
             $scope.saveEvent = function () {
-                alert('saving: ' + dataSvc.userId+', '+dataSvc.tripId+', '+dataSvc.dayId);
+                console.log('saving');
                 var newEvent = $scope.currentEvent;
-                svc.saveRecord(dataSvc.userId, dataSvc.tripId, newEvent).then(function(){
+                svc.saveRecord($stateParams.userId, $stateParams.tripId, newEvent).then(function(){
                     $scope.fetchEvents();
                 }, responseError);
                 $scope.fetchEvents();
             };
             
             $scope.editEvent = function (event) {
-                console.log(dataSvc.userId+', '+dataSvc.tripId+', '+dataSvc.dayId+', '+event.id);
-                return svc.getEvent(dataSvc.userId, dataSvc.tripId, dataSvc.dayId, event.id).then(function (response) {
+                console.log($stateParams.userId+', '+$stateParams.tripId+', '+$stateParams.dayId+', '+event.id);
+                return svc.getEvent($stateParams.userId, $stateParams.tripId, $stateParams.dayId, event.id).then(function (response) {
                     $scope.currentRecord = response.data;
                     $scope.editMode = true;
                     $scope.$broadcast("post-edit", $scope.currentRecord);
@@ -73,8 +73,8 @@
             };
             
             $scope.deleteEvent = function(event) {
-                console.log(dataSvc.userId+', '+dataSvc.tripId+', '+dataSvc.dayId+', '+event.id);
-                return svc.removeEvent(dataSvc.userId, dataSvc.tripId, dataSvc.dayId, event.id).then(function () {
+                console.log($stateParams.userId+', '+$stateParams.tripId+', '+$stateParams.dayId+', '+event.id);
+                return svc.removeEvent($stateParams.userId, $stateParams.tripId, $stateParams.dayId, event.id).then(function () {
                     $scope.fetchEvents();
                 }, responseError);
             };
