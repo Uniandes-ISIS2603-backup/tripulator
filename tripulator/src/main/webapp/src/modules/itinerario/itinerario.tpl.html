@@ -46,12 +46,10 @@
         <div class="container-fluid">
             <ul class="nav nav-tabs tab-text" id="tab-spacing">
                 <li data-toggle="tab" class="active"><a ng-click="selectView('Events')">Events</a></li>
-                <li data-toggle="tab"><a ng-click="selectView('Search')">Search events</a></li>
             </ul>
             <div class="view-container">
                 <!-- nested views -->
-                <div ui-view="plandia"></div>
-                <div ui-view="evento"></div>
+                <div ui-view></div>
                 <!-- fin nested views -->
             </div>
             <div class="view-container">

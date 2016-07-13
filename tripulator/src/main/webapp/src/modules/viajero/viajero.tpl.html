@@ -1,4 +1,3 @@
-<link rel="stylesheet" type="text/css" href="resources/css/home.css">
 <div id="wrapper" style="margin-right:0px;">
 
     <!-- Sidebar -->
@@ -29,7 +28,6 @@
         </ul>
     </div>
     <!-- /#sidebar-wrapper -->
-    <!--<a href="#menu-toggle" class="btn btn-default" id="menu-toggle">Toggle Menu</a>-->
     <div class="container-fluid" id="nospace">
         <div class="create" ng-if="menuOptions[0].active" ng-cloak="">
             <a class="arrow prev" ng-show="showPrevArrow()" ng-click="prevPage()"></a>
@@ -82,9 +80,7 @@
             </div>
 
         </div>
-        <div class="edit" ng-show="menuOptions[1].active">
-            <h1>Edit!</h1>
-        </div>
+
         <div class="overview" ng-show="menuActions[0].active">
             <div class="trip-banner">
                 <uib-carousel active="0" interval="10000">
@@ -98,8 +94,7 @@
                 </uib-carousel>
             </div>  
         </div>
-        <div ui-view="itinerario" ng-show="menuActions[1].active"></div>
-        <div ui-view="multimedia" ng-show="menuActions[3].active"></div>
-        <div ui-view="mapa" ng-show="menuActions[2].active"></div>
+        <div ui-view></div>
     </div>
+</div>
     <a href="#menu-toggle" id="menu-toggle"></a>

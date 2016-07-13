@@ -9,7 +9,6 @@
             $scope.daynames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
             $scope.selectedDay = {};
             $scope.newDayId;
-            console.log($stateParams);
             $scope.itinerario = {
                 id: Number, //número de identificación de un itinerario,  
                 nombre: String, // Nombre dado al itinerario.  
@@ -181,9 +180,6 @@
                 switch(name){
                     case 'Events':
                         $state.go('viajero.itinerario.plandia', {dayId: $scope.newDayId});
-                        break;
-                    case 'Search':
-                        $state.go('viajero.itinerario.evento', {dayId: $scope.newDayId});
                         break;
                 };
             };

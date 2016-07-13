@@ -166,7 +166,6 @@
                         },300);
                     } else {
                         self.getCachedItinerario($scope.trips[$scope.trips.length - 1]);
-                        return response.data;
                     }   
                 }, responseError);
             };
@@ -183,7 +182,6 @@
                 tripId = trip.id;
                 selectFromMenu($scope.menuActions[0]);
                 selectView($scope.menuActions[0]);
-                console.log($stateParams);
             };
 
             /**
@@ -271,18 +269,19 @@
              * @returns {String}
              */
             selectView = function (action) {
+                console.log(tripId);
                 switch (action.name) {
                     case "Calendar":
-                        $state.go("viajero.itinerario", {tripId: tripId});
+                        $state.go(".itinerario", {tripId: tripId});
                         break;
                     case "Gallery":
-                        $state.go("viajero.multimedia", {tripId: tripId});
+                        $state.go(".multimedia", {tripId: tripId});
                         break;
                     case "Map":
-                        $state.go("viajero.mapa", {tripId: tripId});
+                        $state.go(".mapa", {tripId: tripId});
                         break;
                     case "Overview":
-                        $state.go("viajero");
+                        $state.go("viajero", {});
                         break;
                 }
             };
