@@ -1,9 +1,8 @@
 (function (ng) {
-
     var mod = ng.module("itinerarioModule");
-
     mod.controller('ItinerarioController', ['$scope', '$window', 'itinerarioService', '$stateParams', '$state',
         function ($scope, $window, svc, $stateParams, $state) {
+            console.log($state.current.name);
             $scope.days = [];
             $scope.showDayInfo = false;
             $scope.daynames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];

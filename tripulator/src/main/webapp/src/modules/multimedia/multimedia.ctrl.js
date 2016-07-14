@@ -1,8 +1,8 @@
 (function (ng) {
     var mod = ng.module("multimediaModule");
 
-    mod.controller("multimediaCtrl", ["$scope", "multimediaService",'$stateParams', function ($scope, svc,$stateParams) {
-
+    mod.controller("multimediaCtrl", ["$scope", "multimediaService",'$stateParams', '$state', function ($scope, svc,$stateParams, $state) {
+            console.log($state);
             var self = this;
             
             $scope.currentIndex = 0;

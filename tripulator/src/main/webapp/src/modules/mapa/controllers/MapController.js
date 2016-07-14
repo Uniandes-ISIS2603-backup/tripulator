@@ -1,6 +1,7 @@
 (function (ng) {
     var sampleApp = ng.module('mapsApp');
-    sampleApp.controller('MapController', ['$scope', '$stateParams', 'mapService', function ($scope, $stateParams, mapService) {
+    sampleApp.controller('MapController', ['$scope', '$stateParams', 'mapService', '$state', function ($scope, $stateParams, mapService, $state) {
+            console.log($state.current.name);
             var countryToIso = {
                 "Afghanistan": "AF",
                 "Aland Islands": "AX",

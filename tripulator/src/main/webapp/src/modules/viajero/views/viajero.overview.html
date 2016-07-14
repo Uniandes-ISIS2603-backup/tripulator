@@ -1,0 +1,13 @@
+<div class="overview">
+    <div class="trip-banner">
+        <uib-carousel active="0" interval="10000">
+            <uib-slide ng-repeat="image in currentTrip.multimedia">
+                <img ng-src="{{image.src}}">
+                <div class="carousel-caption">
+                    <h1>{{currentTrip.nombre}}</h1>
+                    <h3>{{currentTrip.fechaInicio| date}} - {{currentTrip.fechaFin| date}}</h3>
+                </div>
+            </uib-slide>
+        </uib-carousel>
+    </div>  
+</div>

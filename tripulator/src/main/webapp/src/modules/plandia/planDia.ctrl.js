@@ -1,8 +1,8 @@
 (function (ng) {
     var mod = ng.module("planDiaModule");
     
-    mod.controller('PlanDiaController', ['$scope', 'planDiaService', '$stateParams', function ($scope, svc, $stateParams) {
-            
+    mod.controller('PlanDiaController', ['$scope', 'planDiaService', '$stateParams', '$state', function ($scope, svc, $stateParams, $state) {
+            console.log($state.current.name);
             var self = this;
             
             $scope.events = [];

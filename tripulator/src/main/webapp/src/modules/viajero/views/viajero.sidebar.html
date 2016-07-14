@@ -1,0 +1,27 @@
+<!-- Sidebar -->
+<div id="sidebar-wrapper">
+    <ul class="sidebar-nav">
+        <li class="sidebar-brand">
+            <a>Options</a>
+        </li>
+        <li ng-repeat="option in menuOptions" ng-click="selectOption(option)">
+            <a ng-style="isOptionSelected(option)" >
+                {{option.name}}
+            </a>
+        </li>
+        <li class="sidebar-brand">
+            <a>Actions</a>
+        </li>
+        <li ng-repeat="action in menuActions" ng-click="selectAction(action)">
+            <a ng-style="isActionSelected(action)">
+                {{action.name}}
+            </a>
+        </li>
+        <li class="sidebar-brand">
+            <a>History</a>
+        </li>
+        <li ng-repeat="trip in trips" ng-click="ctrl.getCachedItinerario(trip)">
+            <a ng-style="isTripSelected(trip)">{{trip.nombre}}</a>
+        </li>
+    </ul>
+</div>
