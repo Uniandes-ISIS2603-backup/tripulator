@@ -239,16 +239,16 @@
                 console.log(action);
                 switch (action.name) {
                     case "Calendar":
-                        $state.go("itinerario", {tripId: tripId});
+                        $state.go("^.itinerario", {tripId: tripId});
                         break;
                     case "Gallery":
-                        $state.go("multimedia", {tripId: tripId});
+                        $state.go("^.multimedia", {tripId: tripId});
                         break;
                     case "Map":
-                        $state.go("mapa", {tripId: tripId});
+                        $state.go("^.mapa", {tripId: tripId});
                         break;
                     case "Overview":
-                        $state.go("overview", {trip: $scope.currentTrip});
+                        $state.go("^.overview", {trip: $scope.currentTrip});
                         break;
                 }
             };

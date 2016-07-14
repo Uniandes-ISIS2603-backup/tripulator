@@ -32,12 +32,16 @@
                     .state('viajero', {
                         abstract: true,
                         url: '/viajero',
-                        templateUrl: "src/modules/viajero/views/viajero.tpl.html",
                         params: {
                             userId: null,
                             tripId: null,
                             dayId: null,
                             trip: null
+                        },
+                        views: {
+                            "": {
+                                templateUrl: "src/modules/viajero/views/viajero.tpl.html"
+                            }
                         }
                     })
                     .state('viajero.wrapper', {
