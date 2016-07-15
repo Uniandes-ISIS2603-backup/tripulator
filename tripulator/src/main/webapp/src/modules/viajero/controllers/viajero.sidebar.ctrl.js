@@ -1,10 +1,11 @@
 (function (ng) {
     var mod = ng.module("viajeroModule");
-    mod.controller('SidebarController', ['$scope', '$element', '$window', '$mdDialog', 'viajeroS', 'countryService', '$stateParams', '$state',
-        function ($scope, $element, $window, $mdDialog, svc, countryService, $stateParams, $state) {
+    mod.controller('SidebarController', ['$scope', '$mdDialog', 'viajeroS', '$stateParams', '$state', 'sidebarService',
+        function ($scope, $mdDialog, svc, $stateParams, $state, sidebarService) {
             console.log($state.current.name);
             var self = this;
-            var tripId;
+            $scope.trips = sidebarService.getItems();
+
             /**
              * Array with all of the possible menu options.
              */
@@ -100,23 +101,6 @@
             };
 
             /**
-             * Prototype method that adds 4 photos to the carrousel.
-             * In production, this method should take photos of the countries the user is visiting.
-             * @returns {undefined}
-             */
-            this.generateImage = function () {
-                $scope.currentTrip.multimedia = [];
-                for (var i = 0; i < 4; i++) {
-                    $scope.currentTrip.multimedia.push({
-                        id: i,
-                        src: 'http://lorempixel.com/' + ($element.width() + i) + '/' + (screen.height - i),
-                        name: "image title"
-                    });
-                }
-            };
-
-
-            /**
              * Deletes a trip from the users trip.
              * @returns {undefined}
              */
@@ -127,51 +111,14 @@
             };
 
             /**
-             * Fetches all the trips of the user.
-             * @returns {undefined}
-             */
-            this.getItinerarios = function () {
-                svc.getItinerarios($stateParams.userId).then(function (response) {
-                    $scope.trips = response.data;
-                    if ($scope.trips.length === 0) {
-                        selectFromMenu($scope.menuOptions[0]);
-                        $scope.showAlert("Create Trip", "It appears you have no trips created!");
-                        toggleMenu();
-                        setTimeout(function () {
-                            initGeoChart();
-                        }, 300);
-                    } else {
-                        self.getCachedItinerario($scope.trips[$scope.trips.length - 1]);
-                    }
-                }, responseError);
-            };
-
-            /**
              * Once the trips have been retrieved from the db. They are cached.
              * This method returns the cached trips.
              * @param {type} trip
              * @returns {undefined}
              */
-            this.getCachedItinerario = function (trip) {
+            this.selectTrip = function (trip) {
+                sidebarService.setSelectedItem(trip);
                 $scope.currentTrip = trip;
-                self.generateImage();
-                tripId = trip.id;
-                selectFromMenu($scope.menuActions[0]);
-                selectView($scope.menuActions[0]);
-            };
-
-            /**
-             * Gets a specific trip from the database.
-             * @param {type} tripId
-             * @returns {undefined}
-             */
-            this.getItinerario = function (tripId) {
-                svc.getItinerario($stateParams.userId, tripId).then(function (response) {
-                    $scope.currentTrip = response.data;
-                    self.generateImage();
-                    $scope.menuActions[0].active = true;
-                    self.tripId = tripId;
-                }, responseError);
             };
 
             /**
@@ -239,16 +186,16 @@
                 console.log(action);
                 switch (action.name) {
                     case "Calendar":
-                        $state.go("^.itinerario", {tripId: tripId});
+                        $state.go("viajero.wrapper.itinerario", {tripId: tripId});
                         break;
                     case "Gallery":
-                        $state.go("^.multimedia", {tripId: tripId});
+                        $state.go("viajero.wrapper.multimedia", {tripId: tripId});
                         break;
                     case "Map":
-                        $state.go("^.mapa", {tripId: tripId});
+                        $state.go("viajero.wrapper.mapa", {tripId: tripId});
                         break;
                     case "Overview":
-                        $state.go("^.overview", {trip: $scope.currentTrip});
+                        $state.go("viajero.wrapper.overview", {trip: $scope.currentTrip});
                         break;
                 }
             };
@@ -286,7 +233,5 @@
 
                 });
             };
-
-            this.getItinerarios();
         }]);
 })(window.angular);

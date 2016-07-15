@@ -18,9 +18,9 @@
             </a>
         </li>
         <li class="sidebar-brand">
-            <a>History</a>
+            <a>Trips</a>
         </li>
-        <li ng-repeat="trip in trips" ng-click="ctrl.getCachedItinerario(trip)">
+        <li ng-repeat="trip in trips" ng-click="ctrl.selectTrip(trip)">
             <a ng-style="isTripSelected(trip)">{{trip.nombre}}</a>
         </li>
     </ul>

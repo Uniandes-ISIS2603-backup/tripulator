@@ -1,8 +1,7 @@
 (function (ng) {
     var mod = ng.module("viajeroModule");
-    mod.controller('OverviewController', ['$scope', '$element', '$window', '$mdDialog', 'viajeroS', 'countryService', '$stateParams', '$state',
-        function ($scope, $element, $window, $mdDialog, svc, countryService, $stateParams, $state) {
-            console.log($state.current.name);
+    mod.controller('OverviewController', ['$scope', '$element', '$stateParams', '$state',
+        function ($scope, $element, $stateParams, $state) {
             
             $scope.currentTrip = $stateParams.trip;
 
@@ -21,6 +20,8 @@
                     });
                 }
             };
+            
+            this.generateImage();
         }]);
 })(window.angular);
 

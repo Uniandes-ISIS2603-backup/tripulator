@@ -36,11 +36,13 @@
                             userId: null,
                             tripId: null,
                             dayId: null,
+                            trips: null,
                             trip: null
                         },
                         views: {
                             "": {
-                                templateUrl: "src/modules/viajero/views/viajero.tpl.html"
+                                templateUrl: "src/modules/viajero/views/viajero.tpl.html",
+                                controller: "ViajeroController"
                             }
                         }
                     })
