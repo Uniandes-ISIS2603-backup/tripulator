@@ -2,9 +2,9 @@
     var mod = ng.module("viajeroModule");
     mod.controller('SidebarController', ['$scope', '$mdDialog', 'viajeroS', '$stateParams', '$state', 'sidebarService',
         function ($scope, $mdDialog, svc, $stateParams, $state, sidebarService) {
-            console.log($state.current.name);
             var self = this;
-            $scope.trips = sidebarService.getItems();
+            var selectedTripId = -1;
+            $scope.trips = [];
 
             /**
              * Array with all of the possible menu options.
@@ -105,7 +105,7 @@
              * @returns {undefined}
              */
             this.deleteItinerario = function () {
-                svc.deleteItinerario($stateParams.userId, tripId).then(function (response) {
+                svc.deleteItinerario($stateParams.userId, selectedTripId).then(function (response) {
                     self.getItinerarios();
                 }, responseError);
             };
@@ -117,8 +117,7 @@
              * @returns {undefined}
              */
             this.selectTrip = function (trip) {
-                sidebarService.setSelectedItem(trip);
-                $scope.currentTrip = trip;
+                selectedTripId = trip.id;
             };
 
             /**
@@ -127,7 +126,7 @@
              * @returns css style.
              */
             $scope.isTripSelected = function (trip) {
-                if (trip === $scope.currentTrip) {
+                if (trip.id === selectedTripId) {
                     return {"background": "rgba(180, 209, 255, 0.5)"};
                 }
                 return {};
@@ -184,27 +183,44 @@
              */
             selectView = function (action) {
                 console.log(action);
+                var params = {
+                    tripId: selectedTripId
+                };
                 switch (action.name) {
                     case "Calendar":
-                        $state.go("viajero.wrapper.itinerario", {tripId: tripId});
+                        $state.go("viajero.wrapper.itinerario", params);
                         break;
                     case "Gallery":
-                        $state.go("viajero.wrapper.multimedia", {tripId: tripId});
+                        $state.go("viajero.wrapper.multimedia", params);
                         break;
                     case "Map":
-                        $state.go("viajero.wrapper.mapa", {tripId: tripId});
+                        $state.go("viajero.wrapper.mapa", params);
                         break;
                     case "Overview":
-                        $state.go("viajero.wrapper.overview", {trip: $scope.currentTrip});
+                        $state.go("viajero.wrapper.overview", params);
                         break;
                 }
             };
+            
+                        /**
+             * Fetches all the trips of the user.
+             * @returns {undefined}
+             */
+            this.getItinerarios = function () {
+                svc.getItinerarios($stateParams.userId).then(function (response) {
+                    $scope.trips = response.data;
+                    selectedTripId = $scope.trips[$scope.trips.length - 1];
+                    self.selectView({name: 'Overview'});
+                }, responseError);
+            };
+            
+            if(sidebarService.mustUpdate()){
+                self.getItinerarios();
+                sidebarService.toggleUpdate();
+            }
 
             // DIALOG WINDOWS CONSTRUCTION
             $scope.showAlert = function (title, info) {
-                // Appending dialog to document.body to cover sidenav in docs app
-                // Modal dialogs should fully cover application
-                // to prevent interaction outside of dialog
                 $mdDialog.show(
                         $mdDialog.alert()
                         .parent(angular.element(document.querySelector('#popupContainer')))
@@ -218,7 +234,6 @@
             };
 
             $scope.showDeleteConfirm = function (ev) {
-                // Appending dialog to document.body to cover sidenav in docs app
                 var confirm = $mdDialog.confirm()
                         .title('Are you sure you want to delete?')
                         .textContent('All the information about ' + $scope.currentTrip.nombre

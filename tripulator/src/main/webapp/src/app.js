@@ -35,9 +35,7 @@
                         params: {
                             userId: null,
                             tripId: null,
-                            dayId: null,
-                            trips: null,
-                            trip: null
+                            dayId: null
                         },
                         views: {
                             "": {

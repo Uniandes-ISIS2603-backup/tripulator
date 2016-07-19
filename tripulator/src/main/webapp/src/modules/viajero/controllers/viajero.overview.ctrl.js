@@ -1,10 +1,22 @@
 (function (ng) {
     var mod = ng.module("viajeroModule");
-    mod.controller('OverviewController', ['$scope', '$element', '$stateParams', '$state',
-        function ($scope, $element, $stateParams, $state) {
+    mod.controller('OverviewController', ['$scope', '$element', '$stateParams', 'viajeroS',
+        function ($scope, $element, $stateParams, svc) {
+            var self = this;
+            $scope.currentTrip;
             
-            $scope.currentTrip = $stateParams.trip;
-
+            /**
+             * Displays an error.
+             * @param {type} response
+             * @returns {undefined}
+             */
+            function responseError(response) {
+                self.showError(response);
+            }
+            
+            function showError(response){
+                alert(response.data);
+            }
             /**
              * Prototype method that adds 4 photos to the carrousel.
              * In production, this method should take photos of the countries the user is visiting.
@@ -20,8 +32,18 @@
                     });
                 }
             };
+            /*
+             * Fetches the trip of the user.
+             * @returns {undefined}
+             */
+            this.getItinerario = function () {
+                svc.getItinerario($stateParams.userId, $stateParams.tripId).then(function (response) {
+                    $scope.currentTrip = response.data;
+                    self.generateImage();
+                }, responseError);
+            };
             
-            this.generateImage();
+            self.getItinerario();
         }]);
 })(window.angular);
 

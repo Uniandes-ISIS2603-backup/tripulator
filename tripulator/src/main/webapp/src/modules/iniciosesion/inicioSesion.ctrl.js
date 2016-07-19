@@ -6,10 +6,6 @@
     // crea el controlador con dependencias a $scope y a personService
     mod.controller("inicioSesionCtrl", ["$scope","dataSvc", "InicioSesionService", '$mdDialog', "$state", "$stateParams",
         function ($scope,dataSvc ,svc, $mdDialog,$state) {
-
-
-
-
    $scope.showAlert = function (title, info) {
                 // Appending dialog to document.body to cover sidenav in docs app
                 // Modal dialogs should fully cover application
@@ -25,9 +21,6 @@
                         .targetEvent(info)
                         );
             };
-
-
-
             var encontro = false;
             $scope.buscar = -1;
             var self = this;
@@ -69,7 +62,7 @@
                             && ($scope.currentRecord.password === $scope.loginRecord.password))
                     {
                         dataSvc.userId = $scope.currentRecord.id;
-                        $state.go("viajero.wrapper.overview", {userId: $scope.currentRecord.id});
+                        $state.go("viajero.wrapper", {userId: $scope.currentRecord.id});
                         return;
                     }
                 }
