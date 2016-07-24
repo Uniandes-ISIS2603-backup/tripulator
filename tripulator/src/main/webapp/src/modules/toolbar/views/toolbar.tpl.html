@@ -1,0 +1,17 @@
+<md-toolbar class="mainbar" ng-controller="ToolbarController">
+    <div class="md-toolbar-tools">
+        <div flex="10"></div>
+        <h3>
+            <md-icon class="material-icons">explore</md-icon>
+            <span>Tripulator</span>
+        </h3>
+        <span flex></span>
+        <div ng-if="!isStateLogin()">
+            <md-button class="md-primary md-hue-3" ng-repeat="option in options" ui-sref="{{option.state}}">
+                <md-icon class="material-icons">{{option.icon}}</md-icon>
+                {{option.name}}
+            </md-button>
+        </div>
+        <div flex="10"></div>
+    </div>
+</md-toolbar>

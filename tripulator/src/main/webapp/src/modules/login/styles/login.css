@@ -1,0 +1,12 @@
+md-input-container {
+    margin: 5px !important;
+}
+
+.title {
+    color: rgb(7, 41, 63);
+}
+
+.home-background {
+    background-image: url('../../../../resources/img/backpack.jpg');
+    background-size: cover;
+}

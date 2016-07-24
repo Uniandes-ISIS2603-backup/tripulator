@@ -1,0 +1,16 @@
+.week-days {}
+
+.days {
+    padding-bottom: 0px;
+}
+
+.white-background {
+    background-color: white;
+}
+
+.days-background {
+    text-transform: uppercase;
+    font-weight: 500;
+    font-size: 12px;
+    color: rgba(0, 0, 0, 0.5);
+}

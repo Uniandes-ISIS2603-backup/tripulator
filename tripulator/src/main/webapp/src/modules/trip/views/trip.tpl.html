@@ -1,0 +1,46 @@
+<div flex="100" layout="row" layout-align="none" class="full-height">
+    <div flex="20" class="page-margin"></div>
+    <div layout="column" class="content-color" flex="60">
+        <md-toolbar md-scroll-shrink ng-if="true">
+            <div class="md-toolbar-tools">
+                <md-button ui-sref="trips">
+                    <md-icon class="material-icons">navigate_before</md-icon>
+                    Back
+                </md-button>
+                <span flex></span>
+                <h4>
+                    <span>TRIP PLANNER</span>
+                </h4>
+                <span flex></span>
+                <h4>
+                    <span>TRIP NAME</span>
+                </h4>
+                <div flex="5"></div>
+            </div>
+        </md-toolbar>
+        <md-tabs class="white-background" md-stretch-tabs="always">
+            <md-tab label="March"></md-tab>
+            <md-tab label="June"></md-tab>
+            <md-tab label="July"></md-tab>
+        </md-tabs>
+        <div class="days-background" ng-style="scrollBarWidth()">
+            <div class="days" layout-padding>
+                <md-grid-list md-cols="7" md-row-height="20px" md-gutter="5">
+                    <md-grid-tile class="week-days" md-colspan="1" md-rowspan="1" ng-repeat="day in weekDays" layout-align="center center">
+                        {{day}}
+                    </md-grid-tile>
+                </md-grid-list>
+            </div>
+        </div>
+        <div flex class="calendar scroll-content" layout="row" layout-padding>
+            <md-grid-list md-cols="7" md-row-height="1:1" md-gutter="5" flex>
+                <md-grid-tile md-colspan="1" md-rowspan="1" ng-repeat="n in [].constructor(31) track by $index">
+                    <md-button class="md-primary md-hue-3 md-raised full-height full-width no-margin no-padding" layout-align="start start" ui-sref="day">
+                        15
+                    </md-button>
+                </md-grid-tile>
+            </md-grid-list>
+        </div>
+    </div>
+    <div flex="20" class="page-margin"></div>
+</div>

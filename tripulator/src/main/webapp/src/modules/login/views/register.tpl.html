@@ -1,0 +1,37 @@
+<md-dialog ng-cloak class="medium-dialog">
+    <form>
+        <md-toolbar class="md-primary md-hue-2">
+            <div class="md-toolbar-tools">
+                <span flex="5"></span>
+                <h2>
+                    <md-icon class="material-icons">supervisor_account</md-icon>
+                    <span>Register</span>
+                </h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <md-icon md-font-icon="icon-close" aria-label="Close dialog"></md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <div layout="column">
+                    <md-input-container>
+                        <input ng-model="newUser.username" placeholder="type new username">
+                    </md-input-container>
+                    <md-input-container>
+                        <input ng-model="newUser.password" type="password" placeholder="type new password">
+                    </md-input-container>
+                </div>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <md-button class="md-primary md-hue-2" ng-click="answer()" flex="50">
+                Cancel
+            </md-button>
+            <md-button class="md-primary md-hue-2" ng-click="answer(newUser)" flex="50">
+                Confirm
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

@@ -1,0 +1,40 @@
+<div flex="100" layout="row" layout-align="none" class="full-height">
+    <div flex="20" class="page-margin"></div>
+    <div layout="column" class="content-color" flex="60">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <md-button ui-sref="trip">
+                    <md-icon class="material-icons">navigate_before</md-icon>
+                    Back
+                </md-button>
+                <span flex></span>
+                <h3>
+                    <span>Trip name - Date 2016</span>
+                </h3>
+                <span flex></span>
+                <md-button>
+                    <md-icon class="material-icons">add_box</md-icon>
+                    Create Event
+                </md-button>
+            </div>
+        </md-toolbar>
+        <div class="scroll-content event-holder" layout="row" layout-wrap>
+            <md-card layout="column" flex="30" ng-repeat="n in [1,2,3,4]">
+                <md-card-title>
+                    <md-card-title-text>
+                        <span class="md-headline">Event Name</span>
+                        <span class="md-subhead">Hora1 - Hora2</span>
+                    </md-card-title-text>
+                </md-card-title>
+                <md-card-actions layout="row " layout-align="space-around center " flex="10 ">
+                    <span flex></span>
+                    <md-button class="md-warn md-hue-3" ng-click="delete('',$event)" flex="30">
+                        <md-icon class="material-icons">delete</md-icon>
+                        Delete
+                    </md-button>
+                </md-card-actions>
+            </md-card>
+        </div>
+    </div>
+    <div flex="20" class="page-margin"></div>
+</div>

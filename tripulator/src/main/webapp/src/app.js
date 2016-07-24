@@ -1,114 +1,65 @@
 (function (ng) {
 
-    var mod = ng.module("mainApp", [
-        "googlechart",
-        "ngMaterial",
-        "ngMessages",
-        "ui.router",
-        "ngAnimate",
-        "ui.bootstrap",
-        "itinerarioModule",
-        "planDiaModule",
-        "multimediaModule",
-        "eventoModule",
-        "viajeroModule",
-        "mapsApp",
-        "inicioSesionModule"
+    var app = ng.module("tripulatorApp", [
+        'ui.router',
+        'ngResource',
+        'ngAnimate',
+        'ngMaterial',
+        'ToolbarModule',
+        'LoginModule',
+        'TripsModule',
+        'TripModule',
+        'DayModule',
+        'CreateModule'
     ]);
 
-    mod.config(['$logProvider', function ($logProvider) {
-            $logProvider.debugEnabled(true);
-        }]);
+    app.config(['$logProvider', function ($logProvider) {
+        $logProvider.debugEnabled(true);
+    }]);
 
-    mod.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
-            $urlRouterProvider.otherwise('/login');
-            $stateProvider
-                    .state('login', {
-                        url: '/login',
-                        controller: 'inicioSesionCtrl',
-                        controllerAs: "ctrl",
-                        templateUrl: "src/modules/iniciosesion/iniciosesion.tpl.html"
-                    })
-                    .state('viajero', {
-                        abstract: true,
-                        url: '/viajero',
-                        params: {
-                            userId: null,
-                            tripId: null,
-                            dayId: null
-                        },
-                        views: {
-                            "": {
-                                templateUrl: "src/modules/viajero/views/viajero.tpl.html",
-                                controller: "ViajeroController"
-                            }
-                        }
-                    })
-                    .state('viajero.wrapper', {
-                        views: {
-                            'sidebar@viajero': {
-                                controller: 'SidebarController',
-                                controllerAs: "ctrl",
-                                templateUrl: "src/modules/viajero/views/viajero.sidebar.html"
-                            }
-                        }
-                    })
-                    .state('viajero.wrapper.overview', {
-                        url: '/overview',
-                        views: {
-                            'content@viajero': {
-                                templateUrl: "src/modules/viajero/views/viajero.overview.html",
-                                controller: "OverviewController",
-                                controllerAs: "ctrl"
-                            }
-                        }
-                    })
-                    .state('viajero.wrapper.create', {
-                        url: '/create',
-                        views: {
-                            'content@viajero': {
-                                templateUrl: "src/modules/viajero/views/viajero.create.html",
-                                controller: "CreateController",
-                                controllerAs: "ctrl"
-                            }
-                        }
-                    })
-                    .state('viajero.wrapper.itinerario', {
-                        url: '/itinerario',
-                        views: {
-                            'content@viajero': {
-                                controller: 'ItinerarioController',
-                                controllerAs: "ctrl",
-                                templateUrl: "src/modules/itinerario/itinerario.tpl.html"
-                            }
-                        }
-                    })
-                    .state('viajero.wrapper.multimedia', {
-                        url: '/multimedia',
-                        views: {
-                            'content@viajero': {
-                                controller: 'multimediaCtrl',
-                                templateUrl: "src/modules/multimedia/multimedia.tpl.html"
-                            }
-                        }
-                    })
-                    .state('viajero.wrapper.mapa', {
-                        url: '/mapa',
-                        views: {
-                            'content@viajero': {
-                                controller: 'MapController',
-                                templateUrl: "src/modules/mapa/mapa.tpl.html"
-                            }
-                        }
-                    })
-                    .state('viajero.wrapper.itinerario.plandia', {
-                        url: '/plandia',
-                        views: {
-                            'plan@viajero.itinerario': {
-                                controller: 'PlanDiaController',
-                                templateUrl: "src/modules/plandia/plandia.tpl.html"
-                            }
-                        }
-                    });
-        }]);
+    app.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
+        function createTripState(state) {
+            return {
+                onEnter: function ($mdDialog, $state) {
+                    $mdDialog.show({
+                            controller: CreateController,
+                            templateUrl: './src/modules/create/views/create.tpl.html',
+                            parent: angular.element(document.body),
+                            clickOutsideToClose: true,
+                            fullscreen: true
+                        })
+                        .then(function (newTrip) {
+                            $state.go(state);
+                        }, function () {
+                            $state.go(state);
+                        });
+                }
+            }
+        }
+        $stateProvider
+            .state('login', {
+                url: '/',
+                templateUrl: './src/modules/login/views/login.tpl.html',
+                controller: 'LoginController'
+            })
+            .state('trips', {
+                url: '/trips',
+                templateUrl: './src/modules/trips/views/trips.tpl.html',
+                controller: 'TripsController'
+            })
+            .state('trip', {
+                url: '/trip',
+                templateUrl: './src/modules/trip/views/trip.tpl.html',
+                controller: 'TripController'
+            })
+            .state('day', {
+                url: '/day',
+                templateUrl: './src/modules/day/views/day.tpl.html',
+                controller: 'DayController'
+            })
+            .state('trips.create', createTripState('trips'));
+
+        $urlRouterProvider.otherwise('/');
+    }]);
+
 })(window.angular);
