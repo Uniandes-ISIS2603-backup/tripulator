@@ -5,7 +5,7 @@
  */
 package co.edu.uniandes.csw.tripulator.persistence;
 
-import co.edu.uniandes.csw.tripulator.entities.EventoEntity;
+import co.edu.uniandes.csw.tripulator.entities.EventEntity;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
@@ -28,19 +28,19 @@ import uk.co.jemos.podam.api.PodamFactoryImpl;
  * @author Jose Daniel Fandiño
  */
 @RunWith(Arquillian.class)
-public class EventoPersistenceTest {
+public class EventPersistenceTest {
 
     @Deployment
     public static JavaArchive createDeployment() {
         return ShrinkWrap.create(JavaArchive.class)
-                .addPackage(EventoEntity.class.getPackage())
-                .addPackage(EventoPersistence.class.getPackage())
+                .addPackage(EventEntity.class.getPackage())
+                .addPackage(EventPersistence.class.getPackage())
                 .addAsManifestResource("META-INF/persistence.xml", "persistence.xml")
                 .addAsManifestResource("META-INF/beans.xml", "beans.xml");
     }
 
     @Inject
-    private EventoPersistence eventoPersistence;
+    private EventPersistence eventoPersistence;
 
     @PersistenceContext
     private EntityManager em;
@@ -71,11 +71,11 @@ public class EventoPersistenceTest {
         em.createQuery("delete from EventoEntity").executeUpdate();
     }
 
-    private List<EventoEntity> data = new ArrayList<>();
+    private List<EventEntity> data = new ArrayList<>();
 
     private void insertData() {
         for (int i = 0; i < 3; i++) {
-            EventoEntity entity = factory.manufacturePojo(EventoEntity.class);
+            EventEntity entity = factory.manufacturePojo(EventEntity.class);
             em.persist(entity);
             data.add(entity);
         }
@@ -83,29 +83,29 @@ public class EventoPersistenceTest {
 
     @Test
     public void createEventoTest() {
-        EventoEntity newEntity = factory.manufacturePojo(EventoEntity.class);
-        EventoEntity result = eventoPersistence.create(newEntity);
+        EventEntity newEntity = factory.manufacturePojo(EventEntity.class);
+        EventEntity result = eventoPersistence.create(newEntity);
 
         Assert.assertNotNull(result);
 
-        EventoEntity entity = em.find(EventoEntity.class, result.getId());
+        EventEntity entity = em.find(EventEntity.class, result.getId());
 
         Assert.assertEquals(newEntity.getName(), entity.getName());
         Assert.assertEquals(newEntity.getDescription(), entity.getDescription());
         Assert.assertEquals(newEntity.getCiudad(), entity.getCiudad());
         Assert.assertEquals(newEntity.getImage(), entity.getImage());
-        Assert.assertEquals(newEntity.getFechaInicio(), entity.getFechaInicio());
-        Assert.assertEquals(newEntity.getFechaFin(), entity.getFechaFin());
+        Assert.assertEquals(newEntity.getArrivalDate(), entity.getArrivalDate());
+        Assert.assertEquals(newEntity.getDepartureDate(), entity.getDepartureDate());
         Assert.assertEquals(newEntity.getType(), entity.getType());
     }
 
     @Test
     public void getEventosTest() {
-        List<EventoEntity> list = eventoPersistence.findAll();
+        List<EventEntity> list = eventoPersistence.findAll();
         Assert.assertEquals(data.size(), list.size());
-        for (EventoEntity ent : list) {
+        for (EventEntity ent : list) {
             boolean found = false;
-            for (EventoEntity entity : data) {
+            for (EventEntity entity : data) {
                 if (ent.getId().equals(entity.getId())) {
                     found = true;
                 }
@@ -116,42 +116,42 @@ public class EventoPersistenceTest {
 
     @Test
     public void getEventoTest() {
-        EventoEntity entity = data.get(0);
-        EventoEntity newEntity = eventoPersistence.find(entity.getId());
+        EventEntity entity = data.get(0);
+        EventEntity newEntity = eventoPersistence.find(entity.getId());
         Assert.assertNotNull(newEntity);
         Assert.assertEquals(entity.getName(), newEntity.getName());
         Assert.assertEquals(entity.getDescription(), newEntity.getDescription());
         Assert.assertEquals(entity.getCiudad(), newEntity.getCiudad());
         Assert.assertEquals(entity.getImage(), newEntity.getImage());
-        Assert.assertEquals(entity.getFechaInicio(), newEntity.getFechaInicio());
-        Assert.assertEquals(entity.getFechaFin(), newEntity.getFechaFin());
+        Assert.assertEquals(entity.getArrivalDate(), newEntity.getArrivalDate());
+        Assert.assertEquals(entity.getDepartureDate(), newEntity.getDepartureDate());
         Assert.assertEquals(entity.getType(), newEntity.getType());
     }
 
     @Test
     public void deleteEventoTest() {
-        EventoEntity entity = data.get(0);
+        EventEntity entity = data.get(0);
         eventoPersistence.delete(entity.getId());
-        EventoEntity deleted = em.find(EventoEntity.class, entity.getId());
+        EventEntity deleted = em.find(EventEntity.class, entity.getId());
         Assert.assertNull(deleted);
     }
 
     @Test
     public void updateEventoTest() {
-        EventoEntity entity = data.get(0);
-        EventoEntity newEntity = factory.manufacturePojo(EventoEntity.class);
+        EventEntity entity = data.get(0);
+        EventEntity newEntity = factory.manufacturePojo(EventEntity.class);
         newEntity.setId(entity.getId());
 
         eventoPersistence.update(newEntity);
 
-        EventoEntity resp = em.find(EventoEntity.class, entity.getId());
+        EventEntity resp = em.find(EventEntity.class, entity.getId());
 
         Assert.assertEquals(newEntity.getName(), resp.getName());
         Assert.assertEquals(newEntity.getDescription(), resp.getDescription());
         Assert.assertEquals(newEntity.getCiudad(), resp.getCiudad());
         Assert.assertEquals(newEntity.getImage(), resp.getImage());
-        Assert.assertEquals(newEntity.getFechaInicio(), resp.getFechaInicio());
-        Assert.assertEquals(newEntity.getFechaFin(), resp.getFechaFin());
+        Assert.assertEquals(newEntity.getArrivalDate(), resp.getArrivalDate());
+        Assert.assertEquals(newEntity.getDepartureDate(), resp.getDepartureDate());
         Assert.assertEquals(newEntity.getType(), resp.getType());
     }
 

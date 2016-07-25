@@ -5,7 +5,7 @@
  */
 package co.edu.uniandes.csw.tripulator.persistence;
 
-import co.edu.uniandes.csw.tripulator.entities.ViajeroEntity;
+import co.edu.uniandes.csw.tripulator.entities.TravellerEntity;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
@@ -29,14 +29,14 @@ public class ViajeroPersistenceTest {
     @Deployment
     public static JavaArchive createDeployment() {
         return ShrinkWrap.create(JavaArchive.class)
-                .addPackage(ViajeroEntity.class.getPackage())
-                .addPackage(ViajeroPersistence.class.getPackage())
+                .addPackage(TravellerEntity.class.getPackage())
+                .addPackage(TravellerPersistence.class.getPackage())
                 .addAsManifestResource("META-INF/persistence.xml", "persistence.xml")
                 .addAsManifestResource("META-INF/beans.xml", "beans.xml");
     }
 
     @Inject
-    private ViajeroPersistence viajeroPersistence;
+    private TravellerPersistence viajeroPersistence;
 
     @PersistenceContext
     private EntityManager em;
@@ -68,11 +68,11 @@ public class ViajeroPersistenceTest {
         em.createQuery("delete from ViajeroEntity").executeUpdate();
     }
 
-    private List<ViajeroEntity> data = new ArrayList<>();
+    private List<TravellerEntity> data = new ArrayList<>();
 
     private void insertData() {
         for (int i = 0; i < 3; i++) {
-            ViajeroEntity entity = factory.manufacturePojo(ViajeroEntity.class);
+            TravellerEntity entity = factory.manufacturePojo(TravellerEntity.class);
             em.persist(entity);
             data.add(entity);
         }
@@ -80,23 +80,23 @@ public class ViajeroPersistenceTest {
 
     @Test
     public void createViajeroTest() {
-        ViajeroEntity newEntity = factory.manufacturePojo(ViajeroEntity.class);
-        ViajeroEntity result = viajeroPersistence.create(newEntity);
+        TravellerEntity newEntity = factory.manufacturePojo(TravellerEntity.class);
+        TravellerEntity result = viajeroPersistence.create(newEntity);
 
         Assert.assertNotNull(result);
 
-        ViajeroEntity entity = em.find(ViajeroEntity.class, result.getId());
+        TravellerEntity entity = em.find(TravellerEntity.class, result.getId());
 
         Assert.assertEquals(newEntity.getName(), entity.getName());
     }
 
     @Test
     public void getViajerosTest() {
-        List<ViajeroEntity> list = viajeroPersistence.findAll();
+        List<TravellerEntity> list = viajeroPersistence.findAll();
         Assert.assertEquals(data.size(), list.size());
-        for (ViajeroEntity ent : list) {
+        for (TravellerEntity ent : list) {
             boolean found = false;
-            for (ViajeroEntity entity : data) {
+            for (TravellerEntity entity : data) {
                 if (ent.getId().equals(entity.getId())) {
                     found = true;
                 }
@@ -107,36 +107,36 @@ public class ViajeroPersistenceTest {
 
     @Test
     public void getViajeroTest() {
-        ViajeroEntity entity = data.get(0);
-        ViajeroEntity newEntity = viajeroPersistence.find(entity.getId());
+        TravellerEntity entity = data.get(0);
+        TravellerEntity newEntity = viajeroPersistence.find(entity.getId());
         Assert.assertNotNull(newEntity);
         Assert.assertEquals(entity.getName(), newEntity.getName());
         Assert.assertEquals(entity.getApellido(), newEntity.getApellido());
         Assert.assertEquals(entity.getPassword(), newEntity.getPassword());
         Assert.assertEquals(entity.getEmail(), newEntity.getEmail());
-        Assert.assertEquals(entity.getUsuario(), newEntity.getUsuario());
+        Assert.assertEquals(entity.getUser(), newEntity.getUser());
         
         
     }
 
     @Test
     public void deleteViajeroTest() {
-        ViajeroEntity entity = data.get(0);
+        TravellerEntity entity = data.get(0);
         viajeroPersistence.delete(entity.getId());
-        ViajeroEntity deleted = em.find(ViajeroEntity.class, entity.getId());
+        TravellerEntity deleted = em.find(TravellerEntity.class, entity.getId());
         Assert.assertNull(deleted);
     }
 
     @Test
     public void updateViajeroTest() {
-        ViajeroEntity entity = data.get(0);
-        ViajeroEntity newEntity = factory.manufacturePojo(ViajeroEntity.class);
+        TravellerEntity entity = data.get(0);
+        TravellerEntity newEntity = factory.manufacturePojo(TravellerEntity.class);
 
         newEntity.setId(entity.getId());
 
         viajeroPersistence.update(newEntity);
 
-        ViajeroEntity resp = em.find(ViajeroEntity.class, entity.getId());
+        TravellerEntity resp = em.find(TravellerEntity.class, entity.getId());
 
         Assert.assertEquals(newEntity.getName(), resp.getName());
     }
