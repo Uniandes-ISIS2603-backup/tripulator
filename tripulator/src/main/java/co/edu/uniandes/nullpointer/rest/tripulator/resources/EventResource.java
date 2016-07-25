@@ -40,22 +40,30 @@ public class EventResource {
     IDayLogic dayLogic;
 
     @GET
-    public List<EventDTO> getEvents() throws TripulatorLogicException {
-        return EventConverter.listEntity2DTO(eventLogic.getEvents());
+    public List<EventDTO> getEvents(@PathParam("idTraveller") Long idTraveller,
+            @PathParam("idTrip") Long idTrip,
+            @PathParam("idDay") Long idDay) throws TripulatorLogicException {
+        return EventConverter.listEntity2DTO(eventLogic.getEvents(idTraveller, idTrip, idDay));
     }
 
     @GET
     @Path("{id: \\d+}")
-    public EventDTO getEvent(@PathParam("id") Long id) throws BusinessLogicException {
-        return EventConverter.fullEntity2DTO(eventLogic.getEvento(id));
+    public EventDTO getEvent(@PathParam("idTraveller") Long idTraveller,
+            @PathParam("idTrip") Long idTrip,
+            @PathParam("idDay") Long idDay,
+            @PathParam("id") Long id) throws BusinessLogicException {
+        return EventConverter.fullEntity2DTO(eventLogic.getEvent(idTraveller, idTrip, idDay, id));
     }
 
     @POST
-    public EventDTO createEvent(EventDTO dto) throws TripulatorLogicException {
+    public EventDTO createEvent(@PathParam("idTraveller") Long idTraveller,
+            @PathParam("idTrip") Long idTrip,
+            @PathParam("idDay") Long idDay,
+            @PathParam("id") Long id, EventDTO dto) throws TripulatorLogicException {
         EventEntity entity = EventConverter.fullDTO2Entity(dto);
         EventEntity newEntity;
         try {
-            newEntity = eventLogic.createEvento(entity);
+            newEntity = eventLogic.createEvent(idTraveller, idTrip, idDay, entity);
         } catch (BusinessLogicException ex) {
             LOGGER.log(Level.SEVERE, ex.getLocalizedMessage(), ex);
             throw new WebApplicationException(ex.getLocalizedMessage(), ex, Response.Status.BAD_REQUEST);
@@ -65,12 +73,14 @@ public class EventResource {
 
     @PUT
     @Path("{id: \\d+}")
-    public EventDTO updateEvent(@PathParam("id") Long id, EventDTO dto) throws TripulatorLogicException {
-        LOGGER.log(Level.INFO, "Se ejecuta método updateEvento con id={0}", id);
+    public EventDTO updateEvent(@PathParam("idTraveller") Long idTraveller,
+            @PathParam("idTrip") Long idTrip,
+            @PathParam("idDay") Long idDay,
+            @PathParam("id") Long id, EventDTO dto) throws TripulatorLogicException {
         EventEntity entity = EventConverter.fullDTO2Entity(dto);
         entity.setId(id);
         try {
-            EventEntity savedEvento = eventLogic.updateEvento(entity);
+            EventEntity savedEvento = eventLogic.updateEvent(idTraveller, idTrip, idDay, entity);
             return EventConverter.fullEntity2DTO(savedEvento);
         } catch (BusinessLogicException ex) {
             LOGGER.log(Level.SEVERE, ex.getLocalizedMessage(), ex);
@@ -80,7 +90,15 @@ public class EventResource {
 
     @DELETE
     @Path("{id: \\d+}")
-    public void deleteEvento(@PathParam("id") Long id) throws TripulatorLogicException {
-        eventLogic.deleteEvento(id);
+    public void deleteEvent(@PathParam("idTraveller") Long idTraveller,
+            @PathParam("idTrip") Long idTrip,
+            @PathParam("idDay") Long idDay,
+            @PathParam("id") Long id) throws TripulatorLogicException {
+        try{
+            eventLogic.deleteEvent(idTraveller, idTrip, idDay, id);
+        } catch(BusinessLogicException ex){
+            LOGGER.log(Level.SEVERE, ex.getLocalizedMessage(), ex);
+            throw new WebApplicationException(ex.getLocalizedMessage(), ex, Response.Status.BAD_REQUEST);
+        }
     }
 }
