@@ -1,8 +1,6 @@
 package co.edu.uniandes.csw.tripulator.api;
 import co.edu.uniandes.csw.tripulator.exceptions.BusinessLogicException;
-import co.edu.uniandes.csw.tripulator.entities.DayEntity;
 import co.edu.uniandes.csw.tripulator.entities.EventEntity;
-import java.util.Date;
 import java.util.List;
 
 public interface IEventLogic {

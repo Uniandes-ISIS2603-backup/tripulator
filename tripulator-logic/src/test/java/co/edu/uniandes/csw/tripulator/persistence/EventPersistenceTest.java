@@ -1,11 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package co.edu.uniandes.csw.tripulator.persistence;
 
+import co.edu.uniandes.csw.tripulator.entities.DayEntity;
 import co.edu.uniandes.csw.tripulator.entities.EventEntity;
+import co.edu.uniandes.csw.tripulator.entities.TravellerEntity;
+import co.edu.uniandes.csw.tripulator.entities.TripEntity;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
@@ -23,10 +21,6 @@ import org.junit.runner.RunWith;
 import uk.co.jemos.podam.api.PodamFactory;
 import uk.co.jemos.podam.api.PodamFactoryImpl;
 
-/**
- *
- * @author Jose Daniel Fandiño
- */
 @RunWith(Arquillian.class)
 public class EventPersistenceTest {
 
@@ -40,7 +34,15 @@ public class EventPersistenceTest {
     }
 
     @Inject
-    private EventPersistence eventoPersistence;
+    private EventPersistence eventPersistence;
+
+    private TravellerEntity traveller;
+
+    private TripEntity trip;
+
+    private DayEntity day;
+
+    private List<EventEntity> data = new ArrayList<>();
 
     @PersistenceContext
     private EntityManager em;
@@ -50,7 +52,7 @@ public class EventPersistenceTest {
 
     private final PodamFactory factory = new PodamFactoryImpl();
 
-     @Before
+    @Before
     public void configTest() {
         try {
             utx.begin();
@@ -68,23 +70,33 @@ public class EventPersistenceTest {
     }
 
     private void clearData() {
-        em.createQuery("delete from EventoEntity").executeUpdate();
+        em.createQuery("delete from EventEntity").executeUpdate();
+        em.createQuery("delete from DayEntity").executeUpdate();
+        em.createQuery("delete from TripEntity").executeUpdate();
+        em.createQuery("delete from TravellerEntity").executeUpdate();
     }
 
-    private List<EventEntity> data = new ArrayList<>();
-
     private void insertData() {
+        traveller = factory.manufacturePojo(TravellerEntity.class);
+        em.persist(traveller);
+        trip = factory.manufacturePojo(TripEntity.class);
+        trip.setTraveller(traveller);
+        em.persist(trip);
+        day = factory.manufacturePojo(DayEntity.class);
+        day.setTrip(trip);
+        em.persist(day);
         for (int i = 0; i < 3; i++) {
             EventEntity entity = factory.manufacturePojo(EventEntity.class);
+            entity.setDay(day);
             em.persist(entity);
             data.add(entity);
         }
     }
 
     @Test
-    public void createEventoTest() {
+    public void createEventTest() {
         EventEntity newEntity = factory.manufacturePojo(EventEntity.class);
-        EventEntity result = eventoPersistence.create(newEntity);
+        EventEntity result = eventPersistence.create(newEntity);
 
         Assert.assertNotNull(result);
 
@@ -92,16 +104,13 @@ public class EventPersistenceTest {
 
         Assert.assertEquals(newEntity.getName(), entity.getName());
         Assert.assertEquals(newEntity.getDescription(), entity.getDescription());
-        Assert.assertEquals(newEntity.getCiudad(), entity.getCiudad());
-        Assert.assertEquals(newEntity.getImage(), entity.getImage());
         Assert.assertEquals(newEntity.getArrivalDate(), entity.getArrivalDate());
         Assert.assertEquals(newEntity.getDepartureDate(), entity.getDepartureDate());
-        Assert.assertEquals(newEntity.getType(), entity.getType());
     }
 
     @Test
-    public void getEventosTest() {
-        List<EventEntity> list = eventoPersistence.findAll();
+    public void getEventsTest() {
+        List<EventEntity> list = eventPersistence.findAll(day.getId());
         Assert.assertEquals(data.size(), list.size());
         for (EventEntity ent : list) {
             boolean found = false;
@@ -115,44 +124,38 @@ public class EventPersistenceTest {
     }
 
     @Test
-    public void getEventoTest() {
+    public void getEventTest() {
         EventEntity entity = data.get(0);
-        EventEntity newEntity = eventoPersistence.find(entity.getId());
+        EventEntity newEntity = eventPersistence.find(day.getId(), entity.getId());
         Assert.assertNotNull(newEntity);
         Assert.assertEquals(entity.getName(), newEntity.getName());
         Assert.assertEquals(entity.getDescription(), newEntity.getDescription());
-        Assert.assertEquals(entity.getCiudad(), newEntity.getCiudad());
-        Assert.assertEquals(entity.getImage(), newEntity.getImage());
         Assert.assertEquals(entity.getArrivalDate(), newEntity.getArrivalDate());
         Assert.assertEquals(entity.getDepartureDate(), newEntity.getDepartureDate());
-        Assert.assertEquals(entity.getType(), newEntity.getType());
     }
 
     @Test
-    public void deleteEventoTest() {
+    public void deleteEventTest() {
         EventEntity entity = data.get(0);
-        eventoPersistence.delete(entity.getId());
+        eventPersistence.delete(entity.getId());
         EventEntity deleted = em.find(EventEntity.class, entity.getId());
         Assert.assertNull(deleted);
     }
 
     @Test
-    public void updateEventoTest() {
+    public void updateEventTest() {
         EventEntity entity = data.get(0);
         EventEntity newEntity = factory.manufacturePojo(EventEntity.class);
         newEntity.setId(entity.getId());
 
-        eventoPersistence.update(newEntity);
+        eventPersistence.update(newEntity);
 
         EventEntity resp = em.find(EventEntity.class, entity.getId());
 
         Assert.assertEquals(newEntity.getName(), resp.getName());
         Assert.assertEquals(newEntity.getDescription(), resp.getDescription());
-        Assert.assertEquals(newEntity.getCiudad(), resp.getCiudad());
-        Assert.assertEquals(newEntity.getImage(), resp.getImage());
         Assert.assertEquals(newEntity.getArrivalDate(), resp.getArrivalDate());
         Assert.assertEquals(newEntity.getDepartureDate(), resp.getDepartureDate());
-        Assert.assertEquals(newEntity.getType(), resp.getType());
     }
 
 }

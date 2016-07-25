@@ -10,7 +10,7 @@ import uk.co.jemos.podam.common.PodamExclude;
 
 @Entity
 public class TravellerEntity extends BaseEntity implements Serializable {
-    private String user;
+    private String username;
     private String password;
     
     @OneToMany(mappedBy = "traveller", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -18,11 +18,11 @@ public class TravellerEntity extends BaseEntity implements Serializable {
     private List<TripEntity> trips = new ArrayList<>();
 
     public String getUser() {
-        return user;
+        return username;
     }
 
-    public void setUser(String user) {
-        this.user = user;
+    public void setUser(String username) {
+        this.username = username;
     }
 
     public String getPassword() {

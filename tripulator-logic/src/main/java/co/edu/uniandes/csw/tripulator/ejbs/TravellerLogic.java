@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import co.edu.uniandes.csw.tripulator.api.ITravellerLogic;
+import java.util.ArrayList;
 
 @Stateless
 public class TravellerLogic implements ITravellerLogic {
@@ -99,18 +100,18 @@ public class TravellerLogic implements ITravellerLogic {
 
     @Override
     public List<TripEntity> replaceTrips(List<TripEntity> trips, Long idTraveller) throws BusinessLogicException {
-        TravellerEntity traveller = getTraveller(idTraveller);
         List<TripEntity> oldTrips = tripPersistence.findAll(idTraveller);
+        ArrayList<TripEntity> newTrips = new ArrayList<>();
         for (TripEntity trip : oldTrips) {
             tripPersistence.delete(trip.getId());
-            traveller.removeTrip(trip);
         }
+        TravellerEntity traveller = getTraveller(idTraveller);
 
         for (TripEntity newTrip : trips) {
-            traveller.addTrip(newTrip);
             newTrip.setTraveller(traveller);
             newTrip = tripPersistence.create(newTrip);
+            newTrips.add(newTrip);
         }
-        return trips;
+        return newTrips;
     }
 }

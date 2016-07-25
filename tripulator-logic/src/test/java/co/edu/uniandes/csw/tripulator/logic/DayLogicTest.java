@@ -27,12 +27,12 @@ import uk.co.jemos.podam.api.PodamFactoryImpl;
 import co.edu.uniandes.csw.tripulator.api.IDayLogic;
 
 @RunWith(Arquillian.class)
-public class DiaLogicTest {
+public class DayLogicTest {
 
     private PodamFactory factory = new PodamFactoryImpl();
 
     @Inject
-    private IDayLogic diaLogic;
+    private IDayLogic dayLogic;
 
     @PersistenceContext
     private EntityManager em;
@@ -40,10 +40,10 @@ public class DiaLogicTest {
     @Inject
     private UserTransaction utx;
 
-    private TravellerEntity viajero;
-    private TripEntity itinerario;
+    private TravellerEntity traveller;
+    private TripEntity trip;
     private List<DayEntity> data = new ArrayList<>();
-    private List<EventEntity> eventoData = new ArrayList<>();
+    private List<EventEntity> eventData = new ArrayList<>();
 
     @Deployment
     public static JavaArchive createDeployment() {
@@ -74,39 +74,39 @@ public class DiaLogicTest {
     }
 
     private void clearData() {
-        em.createQuery("delete from EventoEntity").executeUpdate();
-        em.createQuery("delete from DiaEntity").executeUpdate();
-        em.createQuery("delete from ItinerarioEntity").executeUpdate();
-        em.createQuery("delete from ViajeroEntity").executeUpdate();
+        em.createQuery("delete from EventEntity").executeUpdate();
+        em.createQuery("delete from DayEntity").executeUpdate();
+        em.createQuery("delete from TripEntity").executeUpdate();
+        em.createQuery("delete from TravellerEntity").executeUpdate();
     }
 
     private void insertData() {
         
-        viajero = factory.manufacturePojo(TravellerEntity.class);
-        em.persist(viajero);
-        itinerario = factory.manufacturePojo(TripEntity.class);
-        itinerario.setTraveller(viajero);
-        em.persist(itinerario);
+        traveller = factory.manufacturePojo(TravellerEntity.class);
+        em.persist(traveller);
+        trip = factory.manufacturePojo(TripEntity.class);
+        trip.setTraveller(traveller);
+        em.persist(trip);
         for (int i = 0; i < 3; i++) {
             DayEntity entity = factory.manufacturePojo(DayEntity.class);
-            entity.setTrip(itinerario);
+            entity.setTrip(trip);
             em.persist(entity);
             data.add(entity);
         }
         for (int i=0; i<3; i++){
-            EventEntity evento = factory.manufacturePojo(EventEntity.class);
+            EventEntity event = factory.manufacturePojo(EventEntity.class);
             if (i==0){
-                evento.setDias(data);
+                event.setDay(data.get(0));
             }
-            em.persist(evento);
-            eventoData.add(evento);
+            em.persist(event);
+            eventData.add(event);
         }
     }
     
     @Test
-    public void createDiaTest() throws BusinessLogicException {
+    public void createDayTest() throws BusinessLogicException {
         DayEntity expected = factory.manufacturePojo(DayEntity.class);
-        DayEntity created = diaLogic.createDay(viajero.getId(), itinerario.getId(), expected);
+        DayEntity created = dayLogic.createDay(traveller.getId(), trip.getId(), expected);
         
         DayEntity result = em.find(DayEntity.class, created.getId());
         
@@ -114,16 +114,15 @@ public class DiaLogicTest {
         Assert.assertEquals(expected.getId(), result.getId());
         Assert.assertEquals(expected.getDate(), result.getDate());
         Assert.assertEquals(expected.getCity(), result.getCity());
-        Assert.assertEquals(expected.getPais(), result.getPais());
     }
 
     @Test
-    public void getDiasTest() throws BusinessLogicException {
-        List<DayEntity> resultList = diaLogic.getDays(viajero.getId(), itinerario.getId());
+    public void getDaysTest() throws BusinessLogicException {
+        List<DayEntity> resultList = dayLogic.getDays(traveller.getId(), trip.getId());
         TypedQuery<DayEntity> q = em.createQuery("select u from "
-                    + "DiaEntity u where (u.itinerario.id = :idItinerario)",
+                    + "DayEntity u where (u.trip.id = :idTrip)",
                     DayEntity.class);
-        q.setParameter("idItinerario", itinerario.getId());
+        q.setParameter("idTrip", trip.getId());
         List<DayEntity> expectedList = q.getResultList();
         Assert.assertEquals(expectedList.size(), resultList.size());
         for (DayEntity expected : expectedList) {
@@ -138,8 +137,8 @@ public class DiaLogicTest {
     }
     
     @Test
-    public void getDiaTest() throws BusinessLogicException {
-        DayEntity result = diaLogic.getDay(viajero.getId(), itinerario.getId(), data.get(0).getId());
+    public void getDayTest() throws BusinessLogicException {
+        DayEntity result = dayLogic.getDay(traveller.getId(), trip.getId(), data.get(0).getId());
 
         DayEntity expected = em.find(DayEntity.class, data.get(0).getId());
 
@@ -148,25 +147,24 @@ public class DiaLogicTest {
         Assert.assertEquals(expected.getId(), result.getId());
         Assert.assertEquals(expected.getDate(), result.getDate());
         Assert.assertEquals(expected.getCity(), result.getCity());
-        Assert.assertEquals(expected.getPais(), result.getPais());
     }
     
     @Test
-    public void deleteDiaTest() throws BusinessLogicException {
+    public void deleteDayTest() throws BusinessLogicException {
         DayEntity entity = data.get(1);
-        diaLogic.deleteDay(viajero.getId(), itinerario.getId(), entity.getId());
+        dayLogic.deleteDay(traveller.getId(), trip.getId(), entity.getId());
         DayEntity expected = em.find(DayEntity.class, entity.getId());
         Assert.assertNull(expected);
     }
 
     @Test
-    public void updateDiaTest() throws BusinessLogicException {
+    public void updateDayTest() throws BusinessLogicException {
         DayEntity entity = data.get(0);
         DayEntity expected = factory.manufacturePojo(DayEntity.class);
 
         expected.setId(entity.getId());
 
-        diaLogic.updateDay(viajero.getId(),itinerario.getId(),expected);
+        dayLogic.updateDay(traveller.getId(),trip.getId(),expected);
 
         DayEntity resp = em.find(DayEntity.class, entity.getId());
 
@@ -174,60 +172,56 @@ public class DiaLogicTest {
         Assert.assertEquals(expected.getId(), resp.getId());
         Assert.assertEquals(expected.getDate(), resp.getDate());
         Assert.assertEquals(expected.getCity(), resp.getCity());
-        Assert.assertEquals(expected.getPais(), resp.getPais());
     }
     
     @Test
-    public void listEventosTest(){
-        List<EventEntity> list = diaLogic.getEvents(viajero.getId(), itinerario.getId(), data.get(0).getId());
+    public void listEventsTest(){
+        List<EventEntity> list = dayLogic.getEvents(traveller.getId(), trip.getId(), data.get(0).getId());
         Assert.assertEquals(1, list.size());
     }
     
     @Test
-    public void getEventoTest(){
+    public void getEventTest(){
         DayEntity entity = data.get(0);
-        EventEntity eventoEntity = eventoData.get(0);
-        EventEntity response = diaLogic.getEvent(viajero.getId(), itinerario.getId(), entity.getId(), eventoEntity.getId());
+        EventEntity eventEntity = eventData.get(0);
+        EventEntity response = dayLogic.getEvent(traveller.getId(), trip.getId(), entity.getId(), eventEntity.getId());
 
-        Assert.assertEquals(eventoEntity.getName(), response.getName());
-        Assert.assertEquals(eventoEntity.getDescription(), response.getDescription());
-        Assert.assertEquals(eventoEntity.getCiudad(), response.getCiudad());
-        Assert.assertEquals(eventoEntity.getImage(), response.getImage());
-        Assert.assertEquals(eventoEntity.getArrivalDate(), response.getArrivalDate());
-        Assert.assertEquals(eventoEntity.getDepartureDate(), response.getDepartureDate());
-        Assert.assertEquals(eventoEntity.getType(), response.getType());
+        Assert.assertEquals(eventEntity.getName(), response.getName());
+        Assert.assertEquals(eventEntity.getDescription(), response.getDescription());
+        Assert.assertEquals(eventEntity.getArrivalDate(), response.getArrivalDate());
+        Assert.assertEquals(eventEntity.getDepartureDate(), response.getDepartureDate());
     }
     
     @Test
-    public void addEventoTest(){
+    public void addEventTest(){
         DayEntity entity = data.get(0);
-        EventEntity eventoEntity = eventoData.get(1);
-        EventEntity response = diaLogic.addEvent(viajero.getId(), itinerario.getId(), entity.getId(), eventoEntity.getId());
+        EventEntity eventEntity = eventData.get(1);
+        EventEntity response = dayLogic.addEvent(traveller.getId(), trip.getId(), entity.getId(), eventEntity);
 
         Assert.assertNotNull(response);
-        Assert.assertEquals(eventoEntity.getId(), response.getId());
+        Assert.assertEquals(eventEntity.getId(), response.getId());
     }
     
     @Test
-    public void replaceEventosTest(){
+    public void replaceEventsTest(){
             try {
             DayEntity entity = data.get(0);
-            List<EventEntity> list = eventoData.subList(1, 3);
-            diaLogic.replaceEvents(viajero.getId(), itinerario.getId(), entity.getId(), list);
+            List<EventEntity> list = eventData.subList(1, 3);
+            dayLogic.replaceEvents(traveller.getId(), trip.getId(), entity.getId(), list);
 
-            entity = diaLogic.getDay(viajero.getId(), itinerario.getId(), entity.getId());
-            Assert.assertFalse(entity.getEvents().contains(eventoData.get(0)));
-            Assert.assertTrue(entity.getEvents().contains(eventoData.get(1)));
-            Assert.assertTrue(entity.getEvents().contains(eventoData.get(2)));
+            entity = dayLogic.getDay(traveller.getId(), trip.getId(), entity.getId());
+            Assert.assertFalse(entity.getEvents().contains(eventData.get(0)));
+            Assert.assertTrue(entity.getEvents().contains(eventData.get(1)));
+            Assert.assertTrue(entity.getEvents().contains(eventData.get(2)));
         } catch (BusinessLogicException ex) {
             Assert.fail(ex.getLocalizedMessage());
         }
     }
     
     @Test
-    public void removeEventoTest(){
-        diaLogic.removeEvent(viajero.getId(), itinerario.getId(), data.get(0).getId(), eventoData.get(0).getId());
-        EventEntity response = diaLogic.getEvent(viajero.getId(), itinerario.getId(), data.get(0).getId(),eventoData.get(0).getId());
+    public void removeEventTest(){
+        dayLogic.removeEvent(traveller.getId(), trip.getId(), data.get(0).getId(), eventData.get(0).getId());
+        EventEntity response = dayLogic.getEvent(traveller.getId(), trip.getId(), data.get(0).getId(),eventData.get(0).getId());
         Assert.assertNull(response);
     }
 }

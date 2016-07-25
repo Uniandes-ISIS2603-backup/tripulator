@@ -24,10 +24,6 @@ import org.junit.runner.RunWith;
 import uk.co.jemos.podam.api.PodamFactory;
 import uk.co.jemos.podam.api.PodamFactoryImpl;
 
-/**
- *
- * @itinerario Antonio de la Vega
- */
 @RunWith(Arquillian.class)
 public class TripPersistenceTest {
     
@@ -42,7 +38,7 @@ public class TripPersistenceTest {
     }
 
     @Inject
-    private TripPersistence itinerarioPersistence;
+    private TripPersistence tripPersistence;
 
     @PersistenceContext
     private EntityManager em;
@@ -54,7 +50,7 @@ public class TripPersistenceTest {
     
     private final List<TripEntity> data = new ArrayList<>();
     
-    private TravellerEntity viajero;
+    private TravellerEntity traveller;
     
     @Before
     public void configTest() {
@@ -75,25 +71,25 @@ public class TripPersistenceTest {
     }
 
     private void clearData() {
-        em.createQuery("delete from ItinerarioEntity").executeUpdate();
-        em.createQuery("delete from ViajeroEntity").executeUpdate();
+        em.createQuery("delete from TripEntity").executeUpdate();
+        em.createQuery("delete from TravellerEntity").executeUpdate();
     }
 
     private void insertData() {
-        viajero = factory.manufacturePojo(TravellerEntity.class);
-        em.persist(viajero);
+        traveller = factory.manufacturePojo(TravellerEntity.class);
+        em.persist(traveller);
         for (int i = 0; i < 3; i++) {
             TripEntity entity = factory.manufacturePojo(TripEntity.class);
-            entity.setTraveller(viajero);
+            entity.setTraveller(traveller);
             em.persist(entity);
             data.add(entity);            
         }
     }
 
     @Test
-    public void createItinerarioTest() {
+    public void createTripTest() {
         TripEntity newEntity = factory.manufacturePojo(TripEntity.class);
-        TripEntity result = itinerarioPersistence.create(newEntity);
+        TripEntity result = tripPersistence.create(newEntity);
 
         Assert.assertNotNull(result);
 
@@ -103,8 +99,8 @@ public class TripPersistenceTest {
     }
 
     @Test
-    public void getItinerariosTest() {
-        List<TripEntity> list = itinerarioPersistence.findAll(viajero.getId());
+    public void getTripsTest() {
+        List<TripEntity> list = tripPersistence.findAll(traveller.getId());
         Assert.assertEquals(data.size(), list.size());
         for(TripEntity ent : list) {
             boolean found = false;
@@ -118,31 +114,32 @@ public class TripPersistenceTest {
     }
 
     @Test
-    public void getItinerarioTest() {
+    public void getTripTest() {
         TripEntity entity = data.get(0);
-        TripEntity newEntity = itinerarioPersistence.find(viajero.getId(),entity.getId());
+        TripEntity newEntity = tripPersistence.find(traveller.getId(),entity.getId());
         Assert.assertNotNull(newEntity);
         Assert.assertEquals(entity.getName(), newEntity.getName());
         Assert.assertEquals(entity.getArrivalDate(), newEntity.getArrivalDate());
-        Assert.assertEquals(entity.getDepartureDate(), newEntity.getDepartureDate());        
+        Assert.assertEquals(entity.getDepartureDate(), newEntity.getDepartureDate());
+        Assert.assertEquals(entity.getCountry(), newEntity.getCountry());
     }
 
     @Test
-    public void deleteItinerarioTest() {
+    public void deleteTripTest() {
         TripEntity entity = data.get(0);
-        itinerarioPersistence.delete(entity.getId());
+        tripPersistence.delete(entity.getId());
         TripEntity deleted = em.find(TripEntity.class, entity.getId());
         Assert.assertNull(deleted);
     }
 
     @Test
-    public void updateItinerarioTest() {
+    public void updateTripTest() {
         TripEntity entity = data.get(0);
         TripEntity newEntity = factory.manufacturePojo(TripEntity.class);
 
         newEntity.setId(entity.getId());
 
-        itinerarioPersistence.update(newEntity);
+        tripPersistence.update(newEntity);
 
         TripEntity resp = em.find(TripEntity.class, entity.getId());
 

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package co.edu.uniandes.csw.tripulator.persistence;
 
 import co.edu.uniandes.csw.tripulator.entities.TravellerEntity;
@@ -24,7 +19,7 @@ import uk.co.jemos.podam.api.PodamFactory;
 import uk.co.jemos.podam.api.PodamFactoryImpl;
 
 @RunWith(Arquillian.class)
-public class ViajeroPersistenceTest {
+public class TravellerPersistenceTest {
 
     @Deployment
     public static JavaArchive createDeployment() {
@@ -36,7 +31,7 @@ public class ViajeroPersistenceTest {
     }
 
     @Inject
-    private TravellerPersistence viajeroPersistence;
+    private TravellerPersistence travellerPersistence;
 
     @PersistenceContext
     private EntityManager em;
@@ -65,7 +60,7 @@ public class ViajeroPersistenceTest {
     }
 
     private void clearData() {
-        em.createQuery("delete from ViajeroEntity").executeUpdate();
+        em.createQuery("delete from TravellerEntity").executeUpdate();
     }
 
     private List<TravellerEntity> data = new ArrayList<>();
@@ -79,9 +74,9 @@ public class ViajeroPersistenceTest {
     }
 
     @Test
-    public void createViajeroTest() {
+    public void createTravellerTest() {
         TravellerEntity newEntity = factory.manufacturePojo(TravellerEntity.class);
-        TravellerEntity result = viajeroPersistence.create(newEntity);
+        TravellerEntity result = travellerPersistence.create(newEntity);
 
         Assert.assertNotNull(result);
 
@@ -91,8 +86,8 @@ public class ViajeroPersistenceTest {
     }
 
     @Test
-    public void getViajerosTest() {
-        List<TravellerEntity> list = viajeroPersistence.findAll();
+    public void getTravellersTest() {
+        List<TravellerEntity> list = travellerPersistence.findAll();
         Assert.assertEquals(data.size(), list.size());
         for (TravellerEntity ent : list) {
             boolean found = false;
@@ -106,35 +101,31 @@ public class ViajeroPersistenceTest {
     }
 
     @Test
-    public void getViajeroTest() {
+    public void getTravellerTest() {
         TravellerEntity entity = data.get(0);
-        TravellerEntity newEntity = viajeroPersistence.find(entity.getId());
+        TravellerEntity newEntity = travellerPersistence.find(entity.getId());
         Assert.assertNotNull(newEntity);
         Assert.assertEquals(entity.getName(), newEntity.getName());
-        Assert.assertEquals(entity.getApellido(), newEntity.getApellido());
         Assert.assertEquals(entity.getPassword(), newEntity.getPassword());
-        Assert.assertEquals(entity.getEmail(), newEntity.getEmail());
         Assert.assertEquals(entity.getUser(), newEntity.getUser());
-        
-        
     }
 
     @Test
-    public void deleteViajeroTest() {
+    public void deleteTravellerTest() {
         TravellerEntity entity = data.get(0);
-        viajeroPersistence.delete(entity.getId());
+        travellerPersistence.delete(entity.getId());
         TravellerEntity deleted = em.find(TravellerEntity.class, entity.getId());
         Assert.assertNull(deleted);
     }
 
     @Test
-    public void updateViajeroTest() {
+    public void updateTravellerTest() {
         TravellerEntity entity = data.get(0);
         TravellerEntity newEntity = factory.manufacturePojo(TravellerEntity.class);
 
         newEntity.setId(entity.getId());
 
-        viajeroPersistence.update(newEntity);
+        travellerPersistence.update(newEntity);
 
         TravellerEntity resp = em.find(TravellerEntity.class, entity.getId());
 

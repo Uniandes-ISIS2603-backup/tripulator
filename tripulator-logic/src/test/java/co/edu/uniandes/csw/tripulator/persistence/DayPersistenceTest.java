@@ -25,16 +25,11 @@ import org.junit.Before;
 import uk.co.jemos.podam.api.PodamFactory;
 import uk.co.jemos.podam.api.PodamFactoryImpl;
 
-
-/**
- *
- * @author Nicolás
- */
 @RunWith(Arquillian.class)
 public class DayPersistenceTest {
 
     @Inject
-    private DayPersistence diaPersistence;
+    private DayPersistence dayPersistence;
 
     @Inject
     UserTransaction utx;
@@ -46,9 +41,9 @@ public class DayPersistenceTest {
     
     private final List<DayEntity> data = new ArrayList<>();
     
-    private TravellerEntity viajero;
+    private TravellerEntity traveller;
     
-    private TripEntity itinerario;
+    private TripEntity trip;
     
     @Deployment
     public static JavaArchive createDeployement() {
@@ -78,40 +73,39 @@ public class DayPersistenceTest {
     }
 
     private void clearData() {
-        em.createQuery("delete from DiaEntity").executeUpdate();
-        em.createQuery("delete from ItinerarioEntity").executeUpdate();
-        em.createQuery("delete from ViajeroEntity").executeUpdate();
+        em.createQuery("delete from DayEntity").executeUpdate();
+        em.createQuery("delete from TripEntity").executeUpdate();
+        em.createQuery("delete from TravellerEntity").executeUpdate();
     }
 
     private void insertData() {
-        viajero = factory.manufacturePojo(TravellerEntity.class);
-        em.persist(viajero);
-        itinerario = factory.manufacturePojo(TripEntity.class);
-        itinerario.setTraveller(viajero);
-        em.persist(itinerario);
+        traveller = factory.manufacturePojo(TravellerEntity.class);
+        em.persist(traveller);
+        trip = factory.manufacturePojo(TripEntity.class);
+        trip.setTraveller(traveller);
+        em.persist(trip);
         for (int i = 0; i < 3; i++) {
             DayEntity entity = factory.manufacturePojo(DayEntity.class);
-            entity.setTrip(itinerario);
+            entity.setTrip(trip);
             em.persist(entity);
             data.add(entity);
         }
     }
 
     @Test
-    public void createDiaTest() {
+    public void createDayTest() {
         DayEntity newEntity = factory.manufacturePojo(DayEntity.class);
-        DayEntity result = diaPersistence.create(newEntity);
+        DayEntity result = dayPersistence.create(newEntity);
 
         Assert.assertNotNull(result);
         DayEntity entity = em.find(DayEntity.class, newEntity.getId());
         Assert.assertEquals(newEntity.getDate(), entity.getDate());
         Assert.assertEquals(newEntity.getCity(), entity.getCity());
-        Assert.assertEquals(newEntity.getPais(), entity.getPais());
     }
     
     @Test
-    public void getDiasTest() {
-        List<DayEntity> list = diaPersistence.findAll(itinerario.getId());
+    public void getDaysTest() {
+        List<DayEntity> list = dayPersistence.findAll(trip.getId());
         Assert.assertEquals(data.size(), list.size());
         for (DayEntity d : list) {
             boolean found = false;
@@ -124,35 +118,33 @@ public class DayPersistenceTest {
     }
     
     @Test
-    public void getDiaTest() {
+    public void getDayTest() {
         DayEntity entity = data.get(0);
-        DayEntity newEntity = diaPersistence.find(itinerario.getId(), entity.getId());
+        DayEntity newEntity = dayPersistence.find(trip.getId(), entity.getId());
         Assert.assertNotNull(newEntity);
         Assert.assertEquals(newEntity.getDate(), entity.getDate());
         Assert.assertEquals(newEntity.getCity(), entity.getCity());
-        Assert.assertEquals(newEntity.getPais(), entity.getPais());
     }
     
     @Test
-    public void deleteDiaTest() {
+    public void deleteDayTest() {
         DayEntity entity = data.get(0);
-        diaPersistence.delete(entity.getId());
+        dayPersistence.delete(entity.getId());
         DayEntity deleted = em.find(DayEntity.class, entity.getId());
         Assert.assertNull(deleted);
     }
     
     @Test
-    public void updateDiaTest() {
+    public void updateDayTest() {
         DayEntity entity = data.get(0);
         DayEntity newEntity = factory.manufacturePojo(DayEntity.class);
         newEntity.setId(entity.getId());
 
-        diaPersistence.update(newEntity);
+        dayPersistence.update(newEntity);
 
         DayEntity resp = em.find(DayEntity.class, entity.getId());
 
         Assert.assertEquals(resp.getDate(), newEntity.getDate());
         Assert.assertEquals(resp.getCity(), newEntity.getCity());
-        Assert.assertEquals(resp.getPais(), newEntity.getPais());
     }
 }
