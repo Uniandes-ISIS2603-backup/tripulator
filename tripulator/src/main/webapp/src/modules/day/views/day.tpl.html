@@ -3,7 +3,7 @@
     <div layout="column" class="content-color" flex="60">
         <md-toolbar>
             <div class="md-toolbar-tools">
-                <md-button ui-sref="trip">
+                <md-button ng-click="goBack()">
                     <md-icon class="material-icons">navigate_before</md-icon>
                     Back
                 </md-button>
@@ -19,16 +19,16 @@
             </div>
         </md-toolbar>
         <div class="scroll-content event-holder" layout="row" layout-wrap>
-            <md-card layout="column" flex="30" ng-repeat="n in [1,2,3,4]">
+            <md-card layout="column" flex="30" ng-repeat="event in events">
                 <md-card-title>
                     <md-card-title-text>
-                        <span class="md-headline">Event Name</span>
-                        <span class="md-subhead">Hora1 - Hora2</span>
+                        <span class="md-headline">{{event.name}}</span>
+                        <span class="md-subhead">{{event.arrivalDate | date:'shortTime'}}-{{event.departureDate | date:'shortTime'}}</span>
                     </md-card-title-text>
                 </md-card-title>
                 <md-card-actions layout="row " layout-align="space-around center " flex="10 ">
                     <span flex></span>
-                    <md-button class="md-warn md-hue-3" ng-click="delete('',$event)" flex="30">
+                    <md-button class="md-warn md-hue-3" ng-click="delete(event)" flex="30">
                         <md-icon class="material-icons">delete</md-icon>
                         Delete
                     </md-button>

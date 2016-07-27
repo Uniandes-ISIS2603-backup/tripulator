@@ -9,7 +9,7 @@
                 </md-button>
                 <span flex></span>
                 <h4>
-                    <span>TRIP CALENDAR</span>
+                    <span>CALENDAR</span>
                 </h4>
                 <span flex></span>
                 <h4>
@@ -33,7 +33,7 @@
         <div flex class="calendar scroll-content" layout="row" layout-padding>
             <md-grid-list md-cols="7" md-row-height="1:1" md-gutter="5" flex>
                 <md-grid-tile md-colspan="1" md-rowspan="1" ng-repeat="day in days | daysInMonth:currentTab">
-                    <md-button class="md-primary md-hue-3 md-raised full-height full-width no-margin no-padding" layout-align="start start" ng-click="showDay('')">
+                    <md-button class="md-primary md-hue-3 md-raised full-height full-width no-margin no-padding" layout-align="start start" ng-click="showDay(day)" ng-disabled="!isDay(day)" aria-label="day">
                         {{day.date | date}}
                     </md-button>
                 </md-grid-tile>

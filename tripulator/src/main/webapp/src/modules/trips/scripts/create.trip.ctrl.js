@@ -1,4 +1,4 @@
-function CreateController($scope, $mdDialog, $mdToast, TripService, DayService, $stateParams) {
+function CreateController($scope, $mdDialog, $mdToast, TripService, DayService, DateService, $stateParams) {
 
     function createError(idTrip) {
         if (idTrip >= 0) {
@@ -34,7 +34,7 @@ function CreateController($scope, $mdDialog, $mdToast, TripService, DayService, 
 
     function createDays(response) {
         let trip = response.data;
-        createDay(trip.id, new Date(trip.arrivalDate.replace(/-/g, '\/').replace(/T.+/, '')), new Date(trip.departureDate.replace(/-/g, '\/').replace(/T.+/, '')));
+        createDay(trip.id, DateService.generateDate(trip.arrivalDate), DateService.generateDate(trip.departureDate));
     }
 
     $scope.newTrip = {

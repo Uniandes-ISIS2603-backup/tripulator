@@ -1,12 +1,8 @@
 <md-dialog ng-cloak class="medium-dialog">
-    <form name="createEventForm" submit="answer(newEvent)">
+    <form name="createEventForm" ng-submit="answer(newEvent)">
         <md-toolbar class="md-primary md-hue-2">
             <div class="md-toolbar-tools">
                 <h2>Create Event</h2>
-                <span flex></span>
-                <md-button class="md-icon-button" ng-click="cancel()">
-                    <md-icon md-font-icon="icon-close" aria-label="Close dialog"></md-icon>
-                </md-button>
             </div>
         </md-toolbar>
         <md-dialog-content>
@@ -18,18 +14,18 @@
                     <div layout="row">
                         <md-input-container flex="50">
                             <label>Arrival time: </label>
-                            <input type="time" name="arrival" ng-model="newEvent.arrivalTime" ng-required="true" placeholder="HH:mm:ss">
+                            <input type="time" name="arrival" ng-model="newEvent.arrivalDate" ng-required="true" placeholder="HH:mm:ss">
                         </md-input-container>
                         <md-input-container flex="50">
                             <label for="departure">Departure time:</label>
-                            <input type="time" name="departure" ng-model="newEvent.departureTime" ng-required="true" placeholder="HH:mm:ss">
+                            <input type="time" name="departure" ng-model="newEvent.departureDate" ng-required="true" placeholder="HH:mm:ss">
                         </md-input-container>
                     </div>
                 </div>
             </div>
         </md-dialog-content>
         <md-dialog-actions layout="row">
-            <md-button class="md-primary md-hue-2" ng-click="answer()" flex="50">
+            <md-button class="md-primary md-hue-2" ng-click="cancel()" flex="50">
                 Cancel
             </md-button>
             <md-button class="md-primary md-hue-2" type="submit" ng-disabled="createEventForm.$invalid" flex="50">

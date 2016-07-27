@@ -49,29 +49,7 @@
                     idTrip: null,
                     idDay: null
                 }
-            })
-            .state('day.create', {
-                onEnter: function ($mdDialog, $state) {
-                    $mdDialog.show({
-                            controller: CreateEventController,
-                            templateUrl: './src/modules/day/views/create.event.html',
-                            parent: angular.element(document.body),
-                            clickOutsideToClose: true,
-                            fullscreen: true
-                        })
-                        .then(function (newTrip) {
-                            $state.go('day');
-                        }, function () {
-                            $state.go('day');
-                        });
-                },
-                params: {
-                    idTraveller: null,
-                    idTrip: null,
-                    idDay: null
-                }
             });
-
         $urlRouterProvider.otherwise('/');
     }]);
 

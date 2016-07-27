@@ -1,20 +1,65 @@
 (function (ng) {
     var mod = ng.module('DayModule');
-    mod.controller('DayController', ['$scope', '$mdDialog', '$state', '$stateParams', function ($scope, $mdDialog, $state, $stateParams) {
-        console.log($stateParams);
-        $scope.delete = function (ev, event) {
-            var confirm = $mdDialog.confirm()
+    mod.controller('DayController', ['$scope', '$mdDialog', '$mdToast', 'EventService', '$state', '$stateParams', function ($scope, $mdDialog, $mdToast, eventService, $state, $stateParams) {
+
+        function deletedEvent() {
+            $mdToast.showSimple('The event was deleted.');
+            getEvents();
+        }
+
+        function noDeletedEvent() {
+            $mdToast.showSimple('The event could not be deleted.');
+        }
+
+        function noEvents() {
+            $mdToast.showSimple("Sorry! We couldn't fetch your events!");
+        }
+
+        function hasEvents(response) {
+            $scope.events = response.data;
+            if ($scope.events.length === 0) {
+                $mdToast.showSimple('You have no events planned for today! Please create one.')
+            }
+        }
+
+        function getEvents() {
+            eventService.getEvents($stateParams.idTraveller, $stateParams.idTrip, $stateParams.idDay).then(hasEvents, noEvents);
+        }
+
+        function deleteEvent(idEvent) {
+            eventService.deleteEvent($stateParams.idTraveller, $stateParams.idTrip, $stateParams.idDay, idEvent).then(deletedEvent, noDeletedEvent);
+        }
+
+        $scope.events = [];
+
+        $scope.delete = function (event) {
+            let deleteWrapper = function () {
+                deleteEvent(event.id);
+            };
+
+            let confirm = $mdDialog.confirm()
                 .title('Would you like to delete this event?')
                 .textContent('The event will be gone forever.')
                 .ariaLabel('Delete')
-                .targetEvent(ev)
                 .ok('Delete')
                 .cancel('Cancel');
-            $mdDialog.show(confirm).then(function () {}, function () {});
+            $mdDialog.show(confirm).then(deleteWrapper, noDeletedEvent);
         };
 
         $scope.showCreate = function () {
-            $state.go('day.create', $stateParams);
+            $mdDialog.show({
+                controller: CreateEventController,
+                templateUrl: './src/modules/day/views/create.event.html',
+                parent: angular.element(document.body),
+                clickOutsideToClose: true,
+                fullscreen: true
+            }).then(getEvents);
         };
+
+        $scope.goBack = function () {
+            $state.go('trip', $stateParams);
+        };
+
+        getEvents();
     }]);
 })(window.angular);
