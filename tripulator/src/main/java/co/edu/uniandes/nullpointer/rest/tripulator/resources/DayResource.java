@@ -18,10 +18,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import co.edu.uniandes.csw.tripulator.api.IDayLogic;
 
-/**
- *
- * @author Nicolás Gómez G.
- */
 @Path("/travellers/{idTraveller}/trips/{idTrip}/days")
 @Produces("application/json")
 @RequestScoped

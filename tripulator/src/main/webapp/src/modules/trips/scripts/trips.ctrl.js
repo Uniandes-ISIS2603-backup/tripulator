@@ -1,19 +1,66 @@
 (function (ng) {
     var mod = ng.module('TripsModule');
-    mod.controller('TripsController', ['$scope', '$mdDialog', '$state', function ($scope, $mdDialog, $state) {
-        $scope.delete = function (ev, trip) {
-            var confirm = $mdDialog.confirm()
+    mod.controller('TripsController', ['$scope', '$mdDialog', '$mdToast', 'TripService', '$state', '$stateParams', function ($scope, $mdDialog, $mdToast, tripService, $state, $stateParams) {
+
+        function deletedTrip() {
+            $mdToast.showSimple('The trip was deleted.');
+            getTrips();
+        }
+
+        function noDeletedTrip() {
+            $mdToast.showSimple('The trip could not be deleted.');
+        }
+
+        function noTrips() {
+            $mdToast.showSimple("Sorry! We couldn't fetch your trips!");
+        }
+
+        function hasTrips(response) {
+            $scope.trips = response.data;
+            if ($scope.trips.length === 0) {
+                $mdToast.showSimple('You have no trips! Please create one.')
+            }
+        }
+
+        function getTrips() {
+            tripService.getTrips($stateParams.idTraveller).then(hasTrips, noTrips);
+        }
+
+        function deleteTrip(idTrip) {
+            tripService.deleteTrip($stateParams.idTraveller, idTrip).then(deletedTrip, noDeletedTrip);
+        }
+
+        $scope.trips = [];
+
+        $scope.delete = function (trip) {
+            let deleteWrapper = function () {
+                deleteTrip(trip.id);
+            };
+
+            let confirm = $mdDialog.confirm()
                 .title('Would you like to delete this trip?')
                 .textContent('The trip and all its contents will be gone forever.')
                 .ariaLabel('Delete')
-                .targetEvent(ev)
                 .ok('Delete')
                 .cancel('Cancel');
-            $mdDialog.show(confirm).then(function () {}, function () {});
+            $mdDialog.show(confirm).then(deleteWrapper, noDeletedTrip);
         };
 
-        $scope.showTrip = function () {
-            $state.go('trip');
+        $scope.showCreate = function () {
+            $mdDialog.show({
+                controller: CreateController,
+                templateUrl: './src/modules/trips/views/create.trip.html',
+                parent: angular.element(document.body),
+                clickOutsideToClose: true,
+                fullscreen: true
+            }).then(getTrips);
         };
+
+        $scope.showTrip = function (trip) {
+            $stateParams.idTrip = trip.id;
+            $state.go('trip', $stateParams);
+        };
+
+        getTrips();
     }]);
 })(window.angular);

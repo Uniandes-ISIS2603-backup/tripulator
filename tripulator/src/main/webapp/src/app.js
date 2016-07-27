@@ -10,7 +10,6 @@
         'TripsModule',
         'TripModule',
         'DayModule',
-        'CreateModule'
     ]);
 
     app.config(['$logProvider', function ($logProvider) {
@@ -18,24 +17,6 @@
     }]);
 
     app.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
-        function createTripState(state) {
-            return {
-                onEnter: function ($mdDialog, $state) {
-                    $mdDialog.show({
-                            controller: CreateController,
-                            templateUrl: './src/modules/create/views/create.tpl.html',
-                            parent: angular.element(document.body),
-                            clickOutsideToClose: true,
-                            fullscreen: true
-                        })
-                        .then(function (newTrip) {
-                            $state.go(state);
-                        }, function () {
-                            $state.go(state);
-                        });
-                }
-            }
-        }
         $stateProvider
             .state('login', {
                 url: '/',
@@ -45,19 +26,51 @@
             .state('trips', {
                 url: '/trips',
                 templateUrl: './src/modules/trips/views/trips.tpl.html',
-                controller: 'TripsController'
+                controller: 'TripsController',
+                params: {
+                    idTraveller: null
+                }
             })
             .state('trip', {
                 url: '/trip',
                 templateUrl: './src/modules/trip/views/trip.tpl.html',
-                controller: 'TripController'
+                controller: 'TripController',
+                params: {
+                    idTraveller: null,
+                    idTrip: null
+                }
             })
             .state('day', {
                 url: '/day',
                 templateUrl: './src/modules/day/views/day.tpl.html',
-                controller: 'DayController'
+                controller: 'DayController',
+                params: {
+                    idTraveller: null,
+                    idTrip: null,
+                    idDay: null
+                }
             })
-            .state('trips.create', createTripState('trips'));
+            .state('day.create', {
+                onEnter: function ($mdDialog, $state) {
+                    $mdDialog.show({
+                            controller: CreateEventController,
+                            templateUrl: './src/modules/day/views/create.event.html',
+                            parent: angular.element(document.body),
+                            clickOutsideToClose: true,
+                            fullscreen: true
+                        })
+                        .then(function (newTrip) {
+                            $state.go('day');
+                        }, function () {
+                            $state.go('day');
+                        });
+                },
+                params: {
+                    idTraveller: null,
+                    idTrip: null,
+                    idDay: null
+                }
+            });
 
         $urlRouterProvider.otherwise('/');
     }]);

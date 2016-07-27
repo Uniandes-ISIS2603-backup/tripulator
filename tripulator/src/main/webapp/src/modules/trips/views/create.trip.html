@@ -1,0 +1,33 @@
+<md-dialog ng-cloak class="medium-dialog">
+    <form name="createTripForm" ng-submit="answer(newTrip)">
+        <md-toolbar class="md-primary md-hue-2">
+            <div class="md-toolbar-tools">
+                <h2>Create</h2>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <div layout="column">
+                    <md-input-container>
+                        <input ng-model="newTrip.name" placeholder="Type trip's name" ng-required="true">
+                    </md-input-container>
+                    <md-input-container>
+                        <input ng-model="newTrip.country" placeholder="Type country's name" ng-required="true">
+                    </md-input-container>
+                    <div layout="row">
+                        <md-datepicker ng-model="newTrip.arrivalDate" md-placeholder="Arrival date" ng-required="true" md-max-date="newTrip.departureDate" flex="50"></md-datepicker>
+                        <md-datepicker ng-model="newTrip.departureDate" md-placeholder="Departure date" ng-required="true" md-min-date="newTrip.arrivalDate" flex="50"></md-datepicker>
+                    </div>
+                </div>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <md-button class="md-primary md-hue-2" ng-click="cancel()" flex="50">
+                Cancel
+            </md-button>
+            <md-button class="md-primary md-hue-2" type="submit" ng-disabled="createTripForm.$invalid" flex="50">
+                Confirm
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

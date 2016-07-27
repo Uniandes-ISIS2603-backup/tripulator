@@ -15,7 +15,6 @@ public abstract class TravellerConverter {
             TravellerDTO dto = new TravellerDTO();
             dto.setId(entity.getId());
             
-
             return dto;
         } else {
             return null;

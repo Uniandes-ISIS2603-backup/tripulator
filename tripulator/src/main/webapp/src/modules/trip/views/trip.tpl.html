@@ -3,13 +3,13 @@
     <div layout="column" class="content-color" flex="60">
         <md-toolbar md-scroll-shrink ng-if="true">
             <div class="md-toolbar-tools">
-                <md-button ui-sref="trips">
+                <md-button ng-click="goBack()">
                     <md-icon class="material-icons">navigate_before</md-icon>
                     Back
                 </md-button>
                 <span flex></span>
                 <h4>
-                    <span>TRIP PLANNER</span>
+                    <span>TRIP CALENDAR</span>
                 </h4>
                 <span flex></span>
                 <h4>
@@ -19,9 +19,7 @@
             </div>
         </md-toolbar>
         <md-tabs class="white-background" md-stretch-tabs="always">
-            <md-tab label="March"></md-tab>
-            <md-tab label="June"></md-tab>
-            <md-tab label="July"></md-tab>
+            <md-tab label="{{month | date:'MMMM'}}" ng-repeat="month in months" md-on-select="selectTab(month)"></md-tab>
         </md-tabs>
         <div class="days-background" ng-style="scrollBarWidth()">
             <div class="days" layout-padding>
@@ -34,9 +32,9 @@
         </div>
         <div flex class="calendar scroll-content" layout="row" layout-padding>
             <md-grid-list md-cols="7" md-row-height="1:1" md-gutter="5" flex>
-                <md-grid-tile md-colspan="1" md-rowspan="1" ng-repeat="n in [].constructor(31) track by $index">
-                    <md-button class="md-primary md-hue-3 md-raised full-height full-width no-margin no-padding" layout-align="start start" ui-sref="day">
-                        15
+                <md-grid-tile md-colspan="1" md-rowspan="1" ng-repeat="day in days | daysInMonth:currentTab">
+                    <md-button class="md-primary md-hue-3 md-raised full-height full-width no-margin no-padding" layout-align="start start" ng-click="showDay('')">
+                        {{day.date | date}}
                     </md-button>
                 </md-grid-tile>
             </md-grid-list>

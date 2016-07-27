@@ -1,5 +1,5 @@
 <md-dialog ng-cloak class="medium-dialog">
-    <form>
+    <form name="registerForm" ng-submit="answer(newUser)">
         <md-toolbar class="md-primary md-hue-2">
             <div class="md-toolbar-tools">
                 <span flex="5"></span>
@@ -17,19 +17,19 @@
             <div class="md-dialog-content">
                 <div layout="column">
                     <md-input-container>
-                        <input ng-model="newUser.username" placeholder="type new username">
+                        <input ng-model="newUser.username" placeholder="type new username" ng-required="true">
                     </md-input-container>
                     <md-input-container>
-                        <input ng-model="newUser.password" type="password" placeholder="type new password">
+                        <input ng-model="newUser.password" type="password" placeholder="type new password" ng-required="true">
                     </md-input-container>
                 </div>
             </div>
         </md-dialog-content>
         <md-dialog-actions layout="row">
-            <md-button class="md-primary md-hue-2" ng-click="answer()" flex="50">
+            <md-button class="md-primary md-hue-2" ng-click="cancel()" flex="50">
                 Cancel
             </md-button>
-            <md-button class="md-primary md-hue-2" ng-click="answer(newUser)" flex="50">
+            <md-button type="submit" class="md-primary md-hue-2" ng-disabled="registerForm.$invalid" flex="50">
                 Confirm
             </md-button>
         </md-dialog-actions>
