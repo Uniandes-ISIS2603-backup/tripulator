@@ -23,14 +23,15 @@
         }
 
         function getTrips() {
-            tripService.getTrips($stateParams.idTraveller).then(hasTrips, noTrips);
+            tripService.getTrips($stateParams.traveller.id).then(hasTrips, noTrips);
         }
 
         function deleteTrip(idTrip) {
-            tripService.deleteTrip($stateParams.idTraveller, idTrip).then(deletedTrip, noDeletedTrip);
+            tripService.deleteTrip($stateParams.traveller.id, idTrip).then(deletedTrip, noDeletedTrip);
         }
 
         $scope.trips = [];
+        $scope.username = $stateParams.traveller.name;
 
         $scope.delete = function (trip) {
             let deleteWrapper = function () {
@@ -57,7 +58,9 @@
         };
 
         $scope.showTrip = function (trip) {
-            $stateParams.idTrip = trip.id;
+            $stateParams.trip = {};
+            $stateParams.trip.id = trip.id;
+            $stateParams.trip.name = trip.name;
             $state.go('trip', $stateParams);
         };
 

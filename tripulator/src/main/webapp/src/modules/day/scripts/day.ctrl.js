@@ -23,14 +23,16 @@
         }
 
         function getEvents() {
-            eventService.getEvents($stateParams.idTraveller, $stateParams.idTrip, $stateParams.idDay).then(hasEvents, noEvents);
+            eventService.getEvents($stateParams.traveller.id, $stateParams.trip.id, $stateParams.day.id).then(hasEvents, noEvents);
         }
 
         function deleteEvent(idEvent) {
-            eventService.deleteEvent($stateParams.idTraveller, $stateParams.idTrip, $stateParams.idDay, idEvent).then(deletedEvent, noDeletedEvent);
+            eventService.deleteEvent($stateParams.traveller.id, $stateParams.trip.id, $stateParams.day.id, idEvent).then(deletedEvent, noDeletedEvent);
         }
 
         $scope.events = [];
+        $scope.tripname = $stateParams.trip.name;
+        $scope.date = $stateParams.day.date;
 
         $scope.delete = function (event) {
             let deleteWrapper = function () {

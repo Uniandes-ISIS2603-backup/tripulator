@@ -2,17 +2,15 @@
     <div flex="20" class="page-margin"></div>
     <div layout="column" class="content-color" flex="60">
         <md-toolbar>
-            <div class="md-toolbar-tools">
-                <md-button ng-click="goBack()">
+            <div class="md-toolbar-tools sub-toolbar" layout="row" layout-align="space-between center">
+                <md-button ng-click="goBack()" flex="15">
                     <md-icon class="material-icons">navigate_before</md-icon>
                     Back
                 </md-button>
-                <span flex></span>
-                <h3>
-                    <span>Trip name - Date 2016</span>
-                </h3>
-                <span flex></span>
-                <md-button ng-click="showCreate()">
+                <div flex="15">
+                    <span>{{tripname | uppercase | limitTo:15}} - {{date | date:'shortDate'}}</span>
+                </div>
+                <md-button ng-click="showCreate()" flex="15">
                     <md-icon class="material-icons">add_box</md-icon>
                     Create Event
                 </md-button>

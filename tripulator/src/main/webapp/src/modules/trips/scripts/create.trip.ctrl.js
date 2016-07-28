@@ -2,7 +2,7 @@ function CreateController($scope, $mdDialog, $mdToast, TripService, DayService, 
 
     function createError(idTrip) {
         if (idTrip >= 0) {
-            TripService.deleteTrip($stateParams.idTraveller, idTrip);
+            TripService.deleteTrip($stateParams.traveller.id, idTrip);
         }
         $mdToast.showSimple('Sorry, we experienced an error while creating trip.');
     }
@@ -29,7 +29,7 @@ function CreateController($scope, $mdDialog, $mdToast, TripService, DayService, 
         let createErrorWrapper = function () {
             createError(idTrip);
         };
-        DayService.saveDay($stateParams.idTraveller, idTrip, day).then(createDayWrapper, createErrorWrapper);
+        DayService.saveDay($stateParams.traveller.id, idTrip, day).then(createDayWrapper, createErrorWrapper);
     }
 
     function createDays(response) {
@@ -53,6 +53,6 @@ function CreateController($scope, $mdDialog, $mdToast, TripService, DayService, 
         let createErrorWrapper = function () {
             createError(-1);
         };
-        TripService.saveTrip($stateParams.idTraveller, trip).then(createDays, createErrorWrapper);
+        TripService.saveTrip($stateParams.traveller.id, trip).then(createDays, createErrorWrapper);
     };
 }

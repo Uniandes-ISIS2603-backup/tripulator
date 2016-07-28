@@ -7,7 +7,7 @@
         </h3>
         <span flex></span>
         <div ng-if="!isStateLogin()">
-            <md-button class="md-primary md-hue-3" ng-repeat="option in options" ui-sref="{{option.state}}">
+            <md-button class="md-primary md-hue-3" ng-repeat="option in options" ng-click="option.state()">
                 <md-icon class="material-icons">{{option.icon}}</md-icon>
                 {{option.name}}
             </md-button>

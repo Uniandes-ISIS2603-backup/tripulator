@@ -28,7 +28,7 @@
                 templateUrl: './src/modules/trips/views/trips.tpl.html',
                 controller: 'TripsController',
                 params: {
-                    idTraveller: null
+                    traveller: null
                 }
             })
             .state('trip', {
@@ -36,8 +36,8 @@
                 templateUrl: './src/modules/trip/views/trip.tpl.html',
                 controller: 'TripController',
                 params: {
-                    idTraveller: null,
-                    idTrip: null
+                    traveller: null,
+                    trip: null
                 }
             })
             .state('day', {
@@ -45,9 +45,9 @@
                 templateUrl: './src/modules/day/views/day.tpl.html',
                 controller: 'DayController',
                 params: {
-                    idTraveller: null,
-                    idTrip: null,
-                    idDay: null
+                    traveller: null,
+                    trip: null,
+                    day: null
                 }
             });
         $urlRouterProvider.otherwise('/');

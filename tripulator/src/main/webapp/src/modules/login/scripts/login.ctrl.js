@@ -33,7 +33,9 @@
         };
 
         $scope.logIn = function () {
-            $stateParams.idTraveller = 1;
+            $stateParams.traveller = {};
+            $stateParams.traveller.id = 1;
+            $stateParams.traveller.name = $scope.user.username;
             $state.go('trips', $stateParams);
         };
 

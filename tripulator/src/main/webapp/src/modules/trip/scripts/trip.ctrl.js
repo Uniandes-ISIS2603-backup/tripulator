@@ -36,13 +36,14 @@
         }
 
         function getDays() {
-            dayService.getDays($stateParams.idTraveller, $stateParams.idTrip).then(hasDays, noDays);
+            dayService.getDays($stateParams.traveller.id, $stateParams.trip.id).then(hasDays, noDays);
         }
 
         $scope.months = [];
         $scope.days = [];
         $scope.weekDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
         $scope.currentTab;
+        $scope.tripname = $stateParams.trip.name;
 
         $scope.scrollBarWidth = function () {
             let child = document.querySelector('.calendar');
@@ -58,7 +59,9 @@
         };
 
         $scope.showDay = function (day) {
-            $stateParams.idDay = day.id;
+            $stateParams.day = {};
+            $stateParams.day.id = day.id;
+            $stateParams.day.date = day.date;
             $state.go('day', $stateParams);
         };
 

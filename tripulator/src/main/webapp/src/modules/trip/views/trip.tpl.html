@@ -1,25 +1,22 @@
 <div flex="100" layout="row" layout-align="none" class="full-height">
     <div flex="20" class="page-margin"></div>
     <div layout="column" class="content-color" flex="60">
-        <md-toolbar md-scroll-shrink ng-if="true">
-            <div class="md-toolbar-tools">
-                <md-button ng-click="goBack()">
+        <md-toolbar>
+            <div class="md-toolbar-tools sub-toolbar" layout="row" layout-align="space-between center">
+                <md-button ng-click="goBack()" flex="15">
                     <md-icon class="material-icons">navigate_before</md-icon>
                     Back
                 </md-button>
-                <span flex></span>
-                <h4>
-                    <span>CALENDAR</span>
-                </h4>
-                <span flex></span>
-                <h4>
-                    <span>TRIP NAME</span>
-                </h4>
-                <div flex="5"></div>
+                <div flex="15">
+                    <span>{{tripname | uppercase | limitTo:15}}</span>
+                </div>
+                <div flex="15">
+                    <span>{{'Calendar' | uppercase}}</span>
+                </div>
             </div>
         </md-toolbar>
         <md-tabs class="white-background" md-stretch-tabs="always">
-            <md-tab label="{{month | date:'MMMM'}}" ng-repeat="month in months" md-on-select="selectTab(month)"></md-tab>
+            <md-tab label="{{month | date:'MMMM yyyy'}}" ng-repeat="month in months" md-on-select="selectTab(month)"></md-tab>
         </md-tabs>
         <div class="days-background" ng-style="scrollBarWidth()">
             <div class="days" layout-padding>
@@ -34,7 +31,7 @@
             <md-grid-list md-cols="7" md-row-height="1:1" md-gutter="5" flex>
                 <md-grid-tile md-colspan="1" md-rowspan="1" ng-repeat="day in days | daysInMonth:currentTab">
                     <md-button class="md-primary md-hue-3 md-raised full-height full-width no-margin no-padding" layout-align="start start" ng-click="showDay(day)" ng-disabled="!isDay(day)" aria-label="day">
-                        {{day.date | date}}
+                        {{day.date | date:'d'}}
                     </md-button>
                 </md-grid-tile>
             </md-grid-list>

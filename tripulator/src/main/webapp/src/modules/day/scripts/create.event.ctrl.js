@@ -21,7 +21,7 @@ function CreateEventController($scope, $mdDialog, $mdToast, EventService, $state
         $mdDialog.cancel();
     };
     $scope.answer = function (event) {
-        EventService.saveEvent($stateParams.idTraveller, $stateParams.idTrip, $stateParams.idDay, event).then(createEvent, createError);
+        EventService.saveEvent($stateParams.traveller.id, $stateParams.trip.id, $stateParams.day.id, event).then(createEvent, createError);
     };
 
 }

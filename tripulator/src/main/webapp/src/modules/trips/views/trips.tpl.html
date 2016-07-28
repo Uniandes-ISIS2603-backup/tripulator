@@ -2,17 +2,15 @@
     <div flex="20" class="page-margin"></div>
     <div layout="column" class="content-color" flex="60">
         <md-toolbar>
-            <div class="md-toolbar-tools">
-                <h4>
+            <div class="md-toolbar-tools sub-toolbar" layout="row" layout-align="space-between center">
+                <div flex="15">
                     <md-icon class="material-icons">account_circle</md-icon>
-                    <span>ACCOUNT</span>
-                </h4>
-                <span flex></span>
-                <h4>
-                    <span>TRIP HISTORY</span>
-                </h4>
-                <span flex></span>
-                <md-button ng-click="showCreate()">
+                    <span>{{username | uppercase | limitTo: 15}}</span>
+                </div>
+                <div flex="15">
+                    <span>{{'trip history' | uppercase}}</span>
+                </div>
+                <md-button ng-click="showCreate()" flex="15">
                     <md-icon class="material-icons">add_box</md-icon>
                     Create Trip
                 </md-button>

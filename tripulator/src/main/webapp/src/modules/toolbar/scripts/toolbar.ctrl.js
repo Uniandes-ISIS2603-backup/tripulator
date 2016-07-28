@@ -1,16 +1,26 @@
 (function (ng) {
     var mod = ng.module('ToolbarModule');
-    mod.controller('ToolbarController', ['$scope', '$state', function ($scope, $state) {
+    mod.controller('ToolbarController', ['$scope', '$state', '$stateParams', function ($scope, $state, $stateParams) {
+
+        let stateChange = function (state) {
+            return function () {
+                $state.go(state, $stateParams);
+            };
+        };
+
+        let tripsState = stateChange('trips');
+        let loginState = stateChange('login');
+
         $scope.options = [
             {
                 name: 'View Trips',
                 icon: 'flight_land',
-                state: 'trips'
+                state: tripsState
             },
             {
                 name: 'Log out',
                 icon: 'exit_to_app',
-                state: 'login'
+                state: loginState
             }
         ];
         $scope.isStateLogin = function () {
